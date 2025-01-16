@@ -1,0 +1,10 @@
+remote_theme: "mmistakes/minimal-mistakes"
+plugins:
+  - jekyll-include-cache
+
+title: Utkarsh's Meditations
+description: Welcome to my page! This page contains my meditations on various topics.
+author: Utkarsh
+
+# Customize these as needed
+minimal_mistakes_skin: "default" # Options: air, aqua, contrast, dark, dirt, neon, mint, plum, sunrise
