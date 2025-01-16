@@ -7,16 +7,31 @@
   {% seo %}
   {% feed_meta %}
   
-  <!-- Mermaid Support -->
-  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <!-- Mermaid Support - Updated Script -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.2.3/dist/mermaid.min.js"></script>
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    window.onload = function() {
       mermaid.initialize({ 
         startOnLoad: true,
-        theme: 'dark' // Match your site's theme
+        theme: 'dark'
       });
-    });
+      
+      // Force Mermaid to render after page load
+      mermaid.run({
+        querySelector: '.language-mermaid'
+      });
+    };
   </script>
+  
+  <!-- Custom CSS for Mermaid -->
+  <style>
+    .mermaid {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      overflow-x: auto;
+    }
+  </style>
   
   <!-- Include Minimal Mistakes theme -->
   {% include head.html %}
