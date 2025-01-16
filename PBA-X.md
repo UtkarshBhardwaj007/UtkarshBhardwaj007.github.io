@@ -1,5 +1,6 @@
 ---
 layout: single
+title: PBA-X
 ---
 
 # 1. Cryptography

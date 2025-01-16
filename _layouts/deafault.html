@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  {% seo %}
+  {% feed_meta %}
+  
+  <!-- Mermaid Support -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      mermaid.initialize({ 
+        startOnLoad: true,
+        theme: 'dark' // Match your site's theme
+      });
+    });
+  </script>
+  
+  <!-- Include Minimal Mistakes theme -->
+  {% include head.html %}
+</head>
+<body>
+  {{ content }}
+</body>
+</html>

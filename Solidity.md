@@ -1,5 +1,6 @@
 ---
 layout: single
+title: Solidity
 ---
 
 # 1. Contracts

@@ -1,8 +1,7 @@
 ---
 layout: single
+title: "Utkarsh Bhardwaj"
 ---
-
-### 📘 Welcome to My Page
 
 <div style="display: flex; align-items: center; gap: 20px;">
   <div style="flex: 0 0 250px;">

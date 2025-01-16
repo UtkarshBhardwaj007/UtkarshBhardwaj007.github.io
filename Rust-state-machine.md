@@ -1,5 +1,6 @@
 ---
 layout: single
+title: Rust State Machine
 ---
 
 # Dot Code School Solutions

@@ -10,6 +10,13 @@ plugins:
   - jekyll-seo-tag
   - jekyll-feed
 
+defaults:
+  - 
+    scope:
+      path: ""
+    values:
+      layout: single
+
 title: Utkarsh's Meditations
 description: Welcome to my page! This page contains my meditations on various topics.
 author: Utkarsh
