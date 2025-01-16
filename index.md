@@ -1,21 +1,14 @@
 ---
 layout: single
-title: "Utkarsh Bhardwaj"
+title: false
+classes:
+  - wide
+  - layout--center
 ---
 
-<div style="display: flex; align-items: center; gap: 20px;">
-  <div style="flex: 0 0 250px;">
-    <img 
-      src="images/me.jpg" 
-      alt="Utkarsh Bhardwaj" 
-      width="250" 
-      style="border-radius: 50%; box-shadow: 0 4px 6px rgba(0,0,0,0.1);"
-    />
-  </div>
-  
-  <div style="flex: 1; text-align: center;">
-    <h1>Hi 👋, I'm Utkarsh Bhardwaj.</h1>
-  </div>
+<div style="display: flex; align-items: center; margin-bottom: 40px;">
+  <img src="{{ '/images/me.jpg' | relative_url }}" alt="Utkarsh Bhardwaj" style="width: 250px; border-radius: 50%; margin-right: 30px;">
+  <h1 style="margin: 0;">Hi 👋, I'm Utkarsh Bhardwaj.</h1>
 </div>
 
 ### 📝 Meditations
