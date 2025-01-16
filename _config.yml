@@ -1,6 +1,14 @@
 remote_theme: "mmistakes/minimal-mistakes"
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter_opts:
+    block:
+      line_numbers: true
 plugins:
   - jekyll-include-cache
+  - jekyll-seo-tag
+  - jekyll-feed
 
 title: Utkarsh's Meditations
 description: Welcome to my page! This page contains my meditations on various topics.

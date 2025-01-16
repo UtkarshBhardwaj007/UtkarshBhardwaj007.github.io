@@ -1,3 +1,7 @@
+---
+layout: single
+---
+
 # 1. Contracts
 * Solidity's code is encapsulated in contracts. A `contract` is the fundamental building block of Ethereum applications — all variables and functions belong to a contract.
 

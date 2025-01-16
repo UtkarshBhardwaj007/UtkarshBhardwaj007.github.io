@@ -1,3 +1,7 @@
+---
+layout: single
+---
+
 # 1. Cryptography
 ## 1.1 Kerckhoff's Principle:
 A cryptographic system should be secure even if everything about the system, except the key, is public knowledge.

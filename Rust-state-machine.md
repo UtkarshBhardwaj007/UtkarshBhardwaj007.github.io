@@ -1,3 +1,7 @@
+---
+layout: single
+---
+
 # Dot Code School Solutions
 
 This repository contains my solutions for the [DotCodeSchool Courses](https://dotcodeschool.com/). It also contains some notes I made along the way.

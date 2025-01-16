@@ -1,6 +1,5 @@
 ---
 layout: single
-title: UtkarshBhardwaj007's Meditations
 ---
 
 ### 📘 Welcome to My Page
