@@ -72,46 +72,8 @@ A cryptographic system should be secure even if everything about the system, exc
 
 ### 1.6.4 Radix/Patricia Tries
 * A Patricia Trie (Practical Algorithm To Retrieve Information Coded In Alphanumeric) is a modified trie that compresses nodes with only one child, making it more space-efficient. In blockchains, it's used to store state data efficiently.
-```mermaid
-graph TD
-    subgraph "Patricia Trie State Storage"
-        SR[State Root Hash] --> A1[Address: 0xa...]
-        SR --> A2[Address: 0xb...]
-        
-        A1 --> |Account State| AS1["Account A Data:
-        - Balance: 100 ETH
-        - Nonce: 5
-        - Code Hash
-        - Storage Root"]
-        
-        A2 --> |Smart Contract| AS2["Contract B Data:
-        - Balance: 50 ETH
-        - Nonce: 12
-        - Code Hash
-        - Storage Root"]
-        
-        AS2 --> |Storage Trie| ST["Contract Storage:
-        Key1: Value1
-        Key2: Value2
-        ..."]
-        
-        style SR fill:#f96,stroke:#333,stroke-width:4px
-        style A1 fill:#bbf,stroke:#333
-        style A2 fill:#bbf,stroke:#333
-        style AS1 fill:#bfb,stroke:#333
-        style AS2 fill:#bfb,stroke:#333
-        style ST fill:#fbb,stroke:#333
-    end
 
-    subgraph "Key Features"
-        SR -.- K1["✓ Single Root Hash 
-        verifies entire state"]
-        AS1 -.- K2["✓ Efficient Proofs 
-        for account data"]
-        ST -.- K3["✓ Separate Storage Trie 
-        for each contract"]
-    end
-```
+![Diagram Description](images/patricia-trie.png)
 
 ## 1.7 Advanced Cryptography Topics
 
@@ -152,65 +114,13 @@ A VRF is a cryptographic function that:
     * **Network Layer**: Handles peer-to-peer communication between nodes. Manages transaction and block propagation. Maintains network connectivity and node discovery
     * **Data Layer**: Defines structure of blockchain data (blocks, transactions). Implements cryptographic primitives and data structures. Handles data storage and retrieval
     * **Infrastructure Layer**: Base layer providing hardware and software requirements. Includes nodes, physical networks, and computing resources. Supports basic blockchain operations
-```mermaid
-graph TD
-    subgraph "Blockchain Architecture Layers"
-        A[Application Layer] --> C
-        C[Consensus Layer] --> N
-        N[Network Layer] --> D
-        D[Data Layer] --> I
-        I[Infrastructure Layer]
-        
-        A -.- A1["dApps, Smart Contracts, 
-        User Interfaces"]
-        C -.- C1["PoW/PoS, 
-        State Agreement"]
-        N -.- N1["P2P Communication,
-        Node Discovery"]
-        D -.- D1["Blocks, Transactions,
-        Cryptography"]
-        I -.- I1["Nodes, Hardware,
-        Base Network"]
-        
-        style A fill:#f96,stroke:#333
-        style C fill:#bbf,stroke:#333
-        style N fill:#bfb,stroke:#333
-        style D fill:#fbb,stroke:#333
-        style I fill:#ddd,stroke:#333
-    end
-```
+
+![Diagram Description](images/blockchain-architecture-layers.png)
+
 * Different **types of blockchain architectures**:
-```mermaid
-graph TD
-    subgraph "Blockchain Architectures"
-        subgraph "Monolithic"
-            M[Single Chain] --> M1[Consensus]
-            M --> M2[Execution]
-            M --> M3[Data]
-            style M fill:#f96,stroke:#333
-        end
 
-        subgraph "Modular"
-            MD[Base Layer] --> E[Execution Layer]
-            MD --> D[Data Layer]
-            MD --> S[Settlement Layer]
-            style MD fill:#bbf,stroke:#333
-        end
+![Diagram Description](images/kinds-of-blockchain-architectures.png)
 
-        subgraph "Multi-chain"
-            MC[Main Chain] --> P1[Chain 1]
-            MC --> P2[Chain 2]
-            MC --> P3[Chain 3]
-            style MC fill:#bfb,stroke:#333
-        end
-    end
-
-    subgraph "Examples"
-        M -.- ME[Ethereum 1.0]
-        MD -.- MDE[Celestia]
-        MC -.- MCE[Polkadot]
-    end
-```
 * Layers in Blockchain Ecosystem Architecture:
     * **Layer 0**: Network infrastructure protocols that allow blockchains to be built and communicate
         * Not a blockchain itself

@@ -47,40 +47,8 @@ The blockchain client is the software component responsible for managing the net
 ## 9. State transition function
 The state transition function defines how the blockchain's state changes in response to transactions and blocks. It encapsulates the business logic, rules, and operations that govern the blockchain's behavior. (If applicable) Manages the execution and state of smart contracts.
 
-```mermaid
-sequenceDiagram
-    participant Client as Blockchain Client
-    participant STF as State Transition Function
-    participant DB as State Database
-    participant Peers as Other Nodes
-    
-    %% Initialization
-    Client->>Client: Initialize networking stack
-    Client->>Client: Set up consensus mechanisms
-    Client->>STF: Load STF (runtime) from Wasm
-    
-    %% Block Reception
-    Peers->>Client: Receive new blocks
-    Client->>Client: Verify block's validity based on consensus rules
-    
-    %% State Transition Execution
-    Client->>STF: Invoke STF to process block's transactions
-    STF->>STF: Read current state
-    STF->>STF: Apply transactions and compute new state
-    
-    %% State Storage
-    STF-->>Client: Return new state
-    Client->>DB: Store new state in permanent state database (e.g., RocksDB)
-    
-    %% Propagation
-    Client->>Peers: Propagate validated blocks to other nodes
-    
-    %% Runtime Upgrades
-    Client->>Client: Detect runtime upgrade proposal (e.g., adding a new pallet)
-    Client->>Peers: Update STF via on-chain governance
-    Peers->>Client: Download new Wasm runtime
-    Client->>STF: Load and use the new Wasm runtime for subsequent blocks
-```
+![Diagram Description](images/blockchain-client-vs-stf.svg)
+
 ## 10. Enums
 * We use enums a lot in polkadot-sdk. Take this for an example:
 ```rust
