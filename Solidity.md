@@ -37,6 +37,7 @@ function eatHamburgers(string memory _name, uint _amount) public {}
 * In addition to **`public`** and **`private`**, `Solidity` has two more types of visibility for functions: **`internal`** and **`external`**.
 * `internal` is the same as `private`, except that it's also accessible to contracts that inherit from this contract.
 * `external` is similar to `public`, except that these functions can **ONLY** be called outside the contract — they can't be called by other functions inside that contract.
+* In Solidity you can return **more than one** value from a function.
 * It's convention to start private function names and any function parameters with an underscore `_`:
 ```solidity
 function _addToArray(uint _number) private {
@@ -188,3 +189,28 @@ contract newContract is SomeOtherContract {
     }
   }
   ```
+
+# 17. Interfaces
+* An interface is a type in Solidity which is used to specify the functions an object must implement, without defining the implementation of those functions.
+* For our contract to talk to another contract on the blockchain that we don't own, first we need to define an interface. We declare the functions we want to use from the other contract in this interface so that our contract knows what the other contract's functions look like, how to call them, and what sort of response to expect.
+* Once we've defined an interface as:
+```solidity
+contract NumberInterface {
+  function getNum(address _myAddress) public view returns (uint);
+}
+```
+* We can use it in a contract as follows:
+```solidity
+contract MyContract {
+  address NumberInterfaceAddress = 0xab38...
+  // ^ The address of the FavoriteNumber contract on Ethereum
+  NumberInterface numberContract = NumberInterface(NumberInterfaceAddress);
+  // Now `numberContract` is pointing to the other contract
+
+  function someFunction() public {
+    // Now we can call `getNum` from that contract:
+    uint num = numberContract.getNum(msg.sender);
+    // ...and do something with `num` here
+  }
+}
+```

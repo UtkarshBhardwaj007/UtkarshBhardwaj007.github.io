@@ -178,3 +178,61 @@ These are used in consensus mechanisms to filter out chains until we find the ca
 ### 2.5.4 Forks in Blockchain
 * **Soft Fork**: A change to the protocol that is backward compatible. Tightens/adds rules. Old nodes can still validate blocks.
 * **Hard Fork**: A change to the protocol that is not backward compatible. Changes fundamental rules. Old nodes will reject new blocks.
+
+# 3. Polkadot
+## 3.1 Blockchain
+A blockchain is, in its essence, a distributed and decentralized key-value database. The principle of a blockchain is to make it possible for any participant to perform modifications to this database, and for all participants to eventually agree on the current state of said database.
+
+In Polkadot and Substrate-compatible chains, the state of this database is referred to as "the storage". The storage can be seen more or less as a very large HashMap.
+
+A blockchain therefore consists in three main things:
+1. The initial state of the storage at the moment when the blockchain starts
+2. A list of blocks, where each block represents a group of modifications performed to the storage
+3. A peer-to-peer network of clients connected to each other and exchanging information such as newly-produced blocks
+
+Blocks are built on top of each other, forming a sequential list of modifications to the storage on top of its initial state.
+
+## 3.2 Polkadot Architecture
+
+Polkadot is a heterogeneous multichain with shared security and interoperability.
+
+![Diagram Description](images/polkadot-architecture.png)
+
+### 3.2.1 Relay Chain - A Layer 0 Blockchain
+The Relay Chain is the central chain of Polkadot. The Relay Chain has deliberately minimal functionality - for instance, smart contracts are not supported. The main responsibility is to coordinate the system as a whole, including parachains. Other specific work is delegated to the parachains, which have different implementations and features.
+
+### 3.2.2 Parachains and Parathreads
+Polkadot can support a number of execution slots. These slots are like cores on a computer's processor (a modern laptop's processor may have eight cores, for example). Each one of these cores can run one process at a time. 
+
+Polkadot allows these slots using two subscription models:
+- **Parachains**: Have a dedicated slot (core) for their chain and are like a process that runs constantly
+- **Parathreads**: Share slots amongst a group, and are thus more like processes that need to be woken up and run less frequently
+
+### 3.2.3 Validator
+Validators are the Relay chain nodes that, if elected to the validator set, produce blocks on the Relay Chain. They are incentivized to act in the best interests of the network through rewards.
+
+### 3.2.4 Collator
+Collators are full nodes on both a parachain and the Relay Chain. They:
+- Collect parachain transactions
+- Produce state transition proofs for the validators on the Relay Chain
+- Can send and receive messages from other parachains
+- Maintain a full node of the parachain
+- Retain all necessary information of the parachain
+- Produce new block candidates to pass to the Relay Chain validators for verification and inclusion in the shared state of Polkadot
+
+### 3.2.5 Bridges
+A blockchain bridge is a connection that allows for arbitrary data to transfer from one network to another. These chains are interoperable through the bridge but can exist as standalone chains with different protocols, rules, and governance models. 
+
+In Polkadot, bridges:
+- Connect to the Relay Chain
+- Are secured through the Polkadot consensus mechanism
+- Are maintained by collators
+
+# 4. Polkadot SDK
+## 4.1 Polkadot SDK Overview
+* **Polkadot SDK**: A collection of tools and libraries that help developers build applications on the Polkadot network.
+* **Polkadot SDK Components**: The SDK has 3 main components:
+  * **`Substrate`**: A framework for building blockchains. This is the foundational framework of Polkadot SDK. It includes core components like networking, transaction pools and APIs.
+  * **`FRAME`**: A collection of modules that provide common functionality for building blockchain applications. This is built on top of Substrate and defines the Application logic of the blockchain.
+  * **`Cumulus`**: This is a lighter layer in the SDK which enables `substrate` based chains to be compatible with Polkadot.
+

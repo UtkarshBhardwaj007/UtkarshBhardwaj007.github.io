@@ -16,6 +16,7 @@ classes:
 - [Polkadot Blockchain Academy](/PBA-X.md)
 - [Rust based State Machine](/Rust-state-machine.md)
 - [Solidity Programming Language](/Solidity.md)
+- [The Cargo Book](/Cargo-book.md)
 
 ## 🚀 My Projects
 
