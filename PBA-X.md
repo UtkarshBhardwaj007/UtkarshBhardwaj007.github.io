@@ -235,4 +235,6 @@ In Polkadot, bridges:
   * **`Substrate`**: A framework for building blockchains. This is the foundational framework of Polkadot SDK. It includes core components like networking, transaction pools and APIs.
   * **`FRAME`**: A collection of modules that provide common functionality for building blockchain applications. This is built on top of Substrate and defines the Application logic of the blockchain.
   * **`Cumulus`**: This is a lighter layer in the SDK which enables `substrate` based chains to be compatible with Polkadot.
+* **`ZombieNet`**: It helps simulate a relay chain and parachain node setup on a local machine for testing the features and functionalities of a parachain (end-to-end testing for parachains on a local machine).
+* **`Chopsticks`**: Chopsticks is a tool that can be used to test blockchain runtime. It simulates just the relay chain and parachain runtimes without running the nodes and can be used for testing runtime features. Chopsticks is a versatile, light weight testing tool for cross-chain functionality in the Polkadot ecosystem. Chopsticks tooling can be used to test cross-chain functionalities between Polkadot and parachains, as well as the functionalities between different parachains.
 

@@ -3,32 +3,32 @@ layout: single
 title: Solidity with CryptoZombies
 ---
 
-# 1. Contracts
+## 1. Contracts
 * Solidity's code is encapsulated in contracts. A `contract` is the fundamental building block of Ethereum applications — all variables and functions belong to a contract.
 
-# 2. Version Pragma
+## 2. Version Pragma
 * All solidity source code should start with a `version pragma` — a declaration of the version of the Solidity compiler this code should use. This is to prevent issues with future compiler versions potentially introducing changes that would break your code.
 
-# 3. State Variables
+## 3. State Variables
 * State variables are permanently stored in contract storage. This means they're written to the Ethereum blockchain.
 
-# 4. `uint`
+## 4. `uint`
 * In Solidity, uint is actually an alias for `uint256`, a 256-bit unsigned integer. You can declare `uint` with less bits — `uint8`, `uint16`, `uint32`, etc.. But in general you want to simply use `uint`. There's also an `int` data type for signed integers.
 
-# 5. `public`
+## 5. `public`
 * `public` is an access modifier. It means that Solidity automatically creates a function that allows you to access the variable from outside of the contract.
 ```solidity
 // example public array
 Person[] public people;
 ```
 
-# 6. Arrays
+## 6. Arrays
 * There are two types of arrays in Solidity: fixed arrays and dynamic arrays:
     * Fixed arrays: `uint[3]`
     * Dynamic arrays: `uint[]`
 * `array.push()` returns a uint of the new length of the array
 
-# 7. Functions
+## 7. Functions
 * A function declaration in solidity looks like the following:
 ```solidity
 function eatHamburgers(string memory _name, uint _amount) public {}
@@ -63,7 +63,7 @@ function _multiply(uint a, uint b) private pure returns (uint) {
 }
 ```
 
-# 8. Keccak256 and Typecasting
+## 8. Keccak256 and Typecasting
 * Keccak256 is a hash function used in Ethereum. It takes in a variable number of `bytes` and returns a 256-bit hash (32 bytes). It takes in just one parameter of type `bytes`. This means that we have to `"pack"` any parameters before calling keccak256:
 ```solidity
 //6e91ec6b618bb462a4a6ee5aa2cb0e9cf30f7a052bb467b0ba58b8748c00d2e5
@@ -79,7 +79,7 @@ uint8 c = a * b;
 uint8 c = a * uint8(b);
 ```
 
-# 9. Events
+## 9. Events
 * Events allow you to emit log data to the Ethereum blockchain. You can subscribe to these events with client-side code. Events are a way for your contract to communicate that something happened on the blockchain to your app front-end, which can be 'listening' for certain events and take action when they happen:
 ```solidity
 // declare the event
@@ -99,12 +99,12 @@ YourContract.IntegersAdded(function(error, result) {
 })
 ```
 
-# 10. Accounts
+## 10. Accounts
 * In ETH blockchain, each account has an address, which you can think of like a bank account number. It's a unique identifier that points to that account.
 * An `address` is owned by a specific `user` (or a `smart contract`).
 * In crypto-zombies tutorial, when a user creates new zombies by interacting with our app, we set ownership of those zombies to the Ethereum address that called the function.
 
-# 11. Mappings
+## 11. Mappings
 * A mapping is a data structure that maps keys to values.
 ```solidity
 // For a financial app, storing a uint that holds the user's account balance:
@@ -113,14 +113,14 @@ mapping (address => uint) public accountBalance;
 mapping (uint => string) userIdToName;
 ```
 
-# 12. msg.sender
+## 12. msg.sender
 * **NOTE**: In Solidity, there are certain global variables that are available to all functions. One of these is `msg.sender`, which refers to the `address` of the person (or smart contract) who called the current function. 
 * **NOTE**: In Solidity, function execution always needs to start with an external caller. A contract will just sit on the blockchain doing nothing until someone calls one of its functions. So there will always be a `msg.sender`.
 
-# 13. require()
+## 13. require()
 * `require()` is a built-in function in Solidity that checks if a condition is true. If the condition is false, it will throw an error and stop the execution of the function.
 
-# 14. Inheritance
+## 14. Inheritance
 ```solidity
 contract Doge {
   function catchphrase() public returns (string memory) {
@@ -137,7 +137,7 @@ contract BabyDoge is Doge {
 * `BabyDoge` inherits from `Doge`. That means if you compile and deploy `BabyDoge`, it will have access to both `catchphrase()` and `anotherCatchphrase()` (and any other `public` functions we may define on `Doge`).
 * This can be used for logical inheritance (such as with a subclass, a Cat is an Animal). But it can also be used simply for organizing your code by grouping similar logic together into different contracts.
 
-# 15. Imports
+## 15. Imports
 When you have multiple files and you want to import one file into another, Solidity uses the `import` keyword:
 ```solidity
 import "./someothercontract.sol";
@@ -147,7 +147,7 @@ contract newContract is SomeOtherContract {
 }
 ```
 
-# 16. Storage vs Memory (Data location)
+## 16. Storage vs Memory (Data location)
 * Variables can be stored either in `storage` or `memory`.
 * `Storage` refers to variables stored permanently on the blockchain. `Memory` variables are temporary, and are erased between external function calls to your contract.
 * Most of the time you don't need to use these keywords because Solidity handles them by default:
@@ -190,7 +190,7 @@ contract newContract is SomeOtherContract {
   }
   ```
 
-# 17. Interfaces
+## 17. Interfaces
 * An interface is a type in Solidity which is used to specify the functions an object must implement, without defining the implementation of those functions.
 * For our contract to talk to another contract on the blockchain that we don't own, first we need to define an interface. We declare the functions we want to use from the other contract in this interface so that our contract knows what the other contract's functions look like, how to call them, and what sort of response to expect.
 * Once we've defined an interface as:

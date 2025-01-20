@@ -1,11 +1,14 @@
-# The Cargo Book
+---
+layout: single
+title: The Cargo Book
+---
 
-## Project Structure
+## 1. Project Structure
 - The default library file is `src/lib.rs`
 - The default executable file is `src/main.rs`
 - Other executables can be placed in `src/bin/`
 
-## Testing
+## 2. Testing
 Cargo looks for tests in two locations:
 1. **Source Files (`src/`)**
    - Unit tests
@@ -15,34 +18,34 @@ Cargo looks for tests in two locations:
    - Integration tests
    - Requires importing crates
 
-### Test Features
+### 2.1 Test Features
 - `cargo test` runs:
   - Regular tests
   - Compilation of examples
   - Documentation tests
 
-## CI/CD
+## 3. CI/CD
 - For GitHub Actions CI, workflow is created in `.github/workflows/ci.yml`
 
-## Package Management
-### Version Control
+## 4. Package Management
+### 4.1 Version Control
 - **Yanking**: 
   - Marks a version as invalid for new dependencies
   - Existing dependencies continue working
   - Does not delete code
 
-### Dependencies
+### 4.2 Dependencies
 Cargo home:
 - Default location: `$HOME/.cargo/`
 - Stores downloaded build dependencies
 
-### Cargo.toml Configuration
+### 4.3 Cargo.toml Configuration
 ```toml
 [dependencies]        # Package library dependencies
 [dev-dependencies]   # Dependencies for examples, tests, and benchmarks
 ```
 
-### Package Components
+### 4.4 Package Components
 - Targets correspond to source files compilable into crates
 - Types of targets:
   - Library
@@ -51,7 +54,7 @@ Cargo home:
   - Test
   - Benchmark
 
-### Workspace Features
+### 4.5 Workspace Features
 - Features enabled in `[workspace.dependencies]` apply to all workspace packages
 - Dependencies can be marked "optional":
   - Not compiled by default
