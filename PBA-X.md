@@ -238,3 +238,28 @@ In Polkadot, bridges:
 * **`ZombieNet`**: It helps simulate a relay chain and parachain node setup on a local machine for testing the features and functionalities of a parachain (end-to-end testing for parachains on a local machine).
 * **`Chopsticks`**: Chopsticks is a tool that can be used to test blockchain runtime. It simulates just the relay chain and parachain runtimes without running the nodes and can be used for testing runtime features. Chopsticks is a versatile, light weight testing tool for cross-chain functionality in the Polkadot ecosystem. Chopsticks tooling can be used to test cross-chain functionalities between Polkadot and parachains, as well as the functionalities between different parachains.
 
+## 4.2 Substrate (PolkadotSDK's blockchain building framework)
+* **Substrate**: A framework for building blockchains. It provides a set of tools and libraries for building blockchains, including networking, transaction pools, APIs, and other core components. It is mostly un-opinionated and allows developers to build their own blockchain applications. It has the following features:
+  * **Modularity**: Substrate is modular, allowing developers to choose which components they want to use and build their blockchain on top of it.
+  * **Flexibility**/**Extensibility**: Substrate is extensible and customizable, allowing developers to add their own functionality to the blockchain.
+  * **Upgradability**: Substrate is designed to be upgradable, allowing developers to upgrade their blockchain without downtime. The forkless and seamless upgrades are a distinctive feature of the Polkadot SDK.
+
+### 4.2.1 Substrate Wasm Meta Protocol
+
+* **Meta Protocol**: A meta protocol is a protocol that defines rules for creating and modifying other protocols. In the context of `Polkadot` and `Substrate`, the `Substrate Wasm Meta Protocol` refers to a mechanism for `defining`, `updating`, and `executing` the logic that governs the blockchain runtime.
+* **Wasm**: WebAssembly (Wasm) is a lightweight, platform-agnostic binary instruction format designed for high-performance applications. It allows code written in languages like Rust, C++, or Go to run in web browsers and other environments, including blockchains. It is a portable, efficient runtime execution environment.
+* **Substrate Wasm Meta Protocol**: The Substrate Wasm Meta Protocol describes the dynamic, modular architecture in Substrate and Polkadot, where:
+  * Blockchain Runtime:
+    1. Encapsulated in a Wasm binary.
+    2. Contains all the business logic, including consensus mechanisms, transaction validation rules, and governance processes.
+  * Runtime Upgrades:
+    1. Instead of requiring hard forks, the runtime logic can be upgraded on-chain by submitting a new Wasm binary.
+    2. The meta protocol defines the process for proposing, validating, and deploying these upgrades.
+  * Chain Flexibility:
+    1. Because the runtime is abstracted, a single chain can evolve its behavior over time. This enables rapid development and adaptation to new use cases or requirements.
+
+![Diagram Description](images/substrate-based-node.svg)
+
+![Diagram Description](images/substrate|node|runtime.png)
+
+![Diagram Description](images/comm-path-in-node.png)
