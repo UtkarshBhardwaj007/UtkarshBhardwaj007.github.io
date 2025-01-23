@@ -263,3 +263,74 @@ In Polkadot, bridges:
 ![Diagram Description](images/substrate|node|runtime.png)
 
 ![Diagram Description](images/comm-path-in-node.png)
+
+## 4.3 Polkadot SDK Storage Overview
+* Blocks: Stored sequentially, containing transactions and state root hashes.
+* Current State: Stored in a Merkle Trie, with the state root hash providing a compact representation.
+* Database: In Polkadot, RocksDB (or optionally ParityDB) is used - these are NoSQL, key-value databases. The same database stores both blocks and state, but in different ways:
+
+  * Block Storage:
+  ```
+    Key                     Value
+    -----------------------------------------
+    block:0                 <block_0_data>
+    block:1                 <block_1_data>
+    block:2                 <block_2_data>
+    block_hash:0xabc...     <block_data>      # Hash-based lookup
+  ```
+
+  * State Storage:
+  ```
+    Key                              Value
+    -----------------------------------------
+    state:account:alice              <account_data>
+    state:balance:alice             100
+    state:custom_pallet:counter     42
+  ```
+  * **How it works**:
+  The database itself doesn't know about sequences or trees. The node software:
+    * Uses prefix-based keys for different data types
+    * Implements Merkle trie logic in code and Manages state trie structure
+    * Maintains relationships between data
+    * Handles sequential block access
+
+## 4.4 Extrinsics in Polkadot SDK
+In Polkadot SDK based blockchains, the transactions (extrinsics) can be:
+- **Signed**: These are transactions that have been signed by the sender and are ready to be included in a block.
+- **Unsigned**: These are transactions that have been submitted without a signature, often requiring custom validation logic.
+- **Inherent**: typically inserted directly into blocks (like current timestamp) by block authoring nodes, without gossiping between peers
+
+## 4.5 Off Chain Workers (OWCs) and Oracles in Polkadot SDK
+* **Off-chain Workers (OWCs)**: These are background tasks that run outside of the blockchain's consensus process. They can be used for various purposes, such as fetching data from external sources, executing complex computations, or performing other tasks that don't require consensus. OCWs run OUTSIDE the blockchain's deterministic environment.
+* **Oracles**: Oracles are EXTERNAL services that submit data TO the blockchain in the form of transactions.
+
+* Practical Application:
+  ```
+    Use Case    → Implementation Choice
+
+    Low-value data     → OCW direct fetch
+    High-value data    → Oracle service
+    Complex compute    → OCW processing
+    Critical data      → Multiple oracles
+  ```
+
+* Integration Paths:
+  ```
+    Parachain A                    Parachain B
+        ├── OCW fetches data          ├── Uses oracle data
+        ├── Validates locally         ├── Pays for access
+        └── Submits to chain          └── Trusts oracle source
+  ```
+
+# 5. FRAME
+* **FRAME** is a rust-based framework for building Substrate-based blockchains/substrate runtimes by providing re-usable building blocks.
+
+## 5.1 Pallets
+* FRAME takes the opinion that the bockchain runtime should be composed of individual modules called `pallets`.
+![Diagram Description](images/frame-overview.png)
+* Essential components of a `pallet`:
+  * **Calls/Dispatchable Extrinsics**: These are functions that can be called on the pallet. They can be used to interact with the blockchain, such as transferring balance. A transaction will specify the call to dispatch.
+  * **Storage Items**: These are the data that the pallet manages. They can be stored in the blockchain's state.
+  * **Events**: These are the events that the pallet emits. They can be used to notify users of important events, such as a balance change.
+  * **Errors**: These are the errors that the pallet can return. They can be used to indicate that a call failed.
+  * **Hooks**: Hooks allow you to define logic that runs at specific points in the lifecycle of a block such as the beginning or end of a block.
