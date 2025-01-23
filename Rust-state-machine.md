@@ -35,22 +35,23 @@ The Genesis State is the initial state of a blockchain. It represents the very f
     * associated types
 * When you want to use a function or method that is defined within a trait, you need to ensure that the trait is in scope. This is because Rust requires explicit imports for trait methods to avoid ambiguity and to make the code more readable and maintainable.
 
-## 6. Pallet:
+## 6. Pallet
 "Pallet" is a term specific to the Polkadot SDK, which refers to Rust modules which contain logic specific for your blockchain runtime.
 
-## 7. &'static str:
+## 7. &'static str
 In Rust, `&'static str` is a type that represents a string slice with a `'static` lifetime. A `'static` lifetime means that the data is either embedded directly in the program's binary (like string literals) or is explicitly allocated to last for the entire program's execution.
 
-## 8. Blockchain Client:
+## 8. Blockchain Client / Host
 The blockchain client is the software component responsible for managing the network interactions, consensus mechanism, peer-to-peer communication, transaction propagation, block production, and overall coordination of the blockchain nodes.
 
-## 9. State transition function
+## 9. State transition function / Runtime
 The state transition function defines how the blockchain's state changes in response to transactions and blocks. It encapsulates the business logic, rules, and operations that govern the blockchain's behavior. (If applicable) Manages the execution and state of smart contracts.
 
 ![Diagram Description](images/blockchain-client-vs-stf.svg)
 
 ## 10. Enums
 * We use enums a lot in polkadot-sdk. Take this for an example:
+
 ```rust
 pub enum RuntimeCall {
 	Balances(balances::Call<Runtime>),
@@ -60,6 +61,7 @@ pub enum Call<T: Config> {
 	Transfer { to: T::AccountID, amount: T::Balance },
 }
 ```
+
 * In this case, we have a variant `RuntimeCall::Balances`, which itself contains a type `balances::Call`. This means we can access all the calls exposed by `balances:Call` under this variant. As we create more pallets or extend our calls (add more variants to the enum `call` in our pallets), this nested structure will scale very well. We call the `RuntimeCall` an **"outer enum"**, and the `balances::Call` an **"inter enum"**.
 
 ## 11. DotCodeSchool Lecture flow:
