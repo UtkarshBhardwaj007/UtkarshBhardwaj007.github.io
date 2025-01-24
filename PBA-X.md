@@ -179,6 +179,10 @@ These are used in consensus mechanisms to filter out chains until we find the ca
 * **Soft Fork**: A change to the protocol that is backward compatible. Tightens/adds rules. Old nodes can still validate blocks.
 * **Hard Fork**: A change to the protocol that is not backward compatible. Changes fundamental rules. Old nodes will reject new blocks.
 
+## 2.6 Blockchain Node v/s Runtime
+
+![Diagram Description](images/Node-vs-runtime.png)
+
 # 3. Polkadot
 ## 3.1 Blockchain
 A blockchain is, in its essence, a distributed and decentralized key-value database. The principle of a blockchain is to make it possible for any participant to perform modifications to this database, and for all participants to eventually agree on the current state of said database.

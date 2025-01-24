@@ -121,6 +121,9 @@ The block header contains metadata about the block which is used to verify that 
 
 ### 11.7 Macros in polkadot-sdk
 * All the pallets and the runtime follow a certain pattern and thus we can write and use `macros` for them.
+* **FRAME** uses Macros to simplify the development of Pallets, while keeping all of the benefits of using Rust. You can identify most macros in one of two forms:
+  * `#[macro_name]`: **Attribute macros***, which are applied on top of valid rust syntax.
+  * `macro_name!(...)`: **Declarative macros**, which can define their own internal syntax.
 
 #### 11.7.1 The Call Macro
 * The purpose of the `#[macros::call]` macro is to automatically generate the `enum Call` from the functions of the pallet and the pallet level `Dispatch` logic found in each Pallet.
