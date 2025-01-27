@@ -39,12 +39,15 @@ function eatHamburgers(string memory _name, uint _amount) public {}
 * `external` is similar to `public`, except that these functions can **ONLY** be called outside the contract — they can't be called by other functions inside that contract.
 * In Solidity you can return **more than one** value from a function.
 * It's convention to start private function names and any function parameters with an underscore `_`:
+
 ```solidity
 function _addToArray(uint _number) private {
   numbers.push(_number);
 }
 ```
+
 * **Return Values**: Functions can return values. You can specify the type of the return value by adding it after the parameter list and access modifier:
+
 ```solidity
 string greeting = "What's up dog";
 
@@ -52,11 +55,15 @@ function sayHello() public returns (string memory) {
   return greeting;
 }
 ```
+
 * **View Functions**: If a function is only reading data from the blockchain, you can mark it as `view`. This will save you some gas:
+
 ```solidity
 function sayHello() public view returns (string memory) {}
 ```
+
 * **Pure Functions**: If a function doesn't read from the blockchain at all (i.e., it only depends on its parameters), you can mark it as `pure`. This will save you even more gas:
+
 ```solidity
 function _multiply(uint a, uint b) private pure returns (uint) {
   return a * b;
@@ -65,11 +72,14 @@ function _multiply(uint a, uint b) private pure returns (uint) {
 
 ## 8. Keccak256 and Typecasting
 * Keccak256 is a hash function used in Ethereum. It takes in a variable number of `bytes` and returns a 256-bit hash (32 bytes). It takes in just one parameter of type `bytes`. This means that we have to `"pack"` any parameters before calling keccak256:
+
 ```solidity
 //6e91ec6b618bb462a4a6ee5aa2cb0e9cf30f7a052bb467b0ba58b8748c00d2e5
 keccak256(abi.encodePacked("aaaab"));
 ```
+
 * Typecasting is the process of converting one data type to another. In Solidity, we can typecast a variable by putting the type we want to convert to in `parentheses` before the variable:
+
 ```solidity
 uint8 a = 5;
 uint b = 6;
@@ -81,6 +91,7 @@ uint8 c = a * uint8(b);
 
 ## 9. Events
 * Events allow you to emit log data to the Ethereum blockchain. You can subscribe to these events with client-side code. Events are a way for your contract to communicate that something happened on the blockchain to your app front-end, which can be 'listening' for certain events and take action when they happen:
+
 ```solidity
 // declare the event
 event IntegersAdded(uint x, uint y, uint result);
@@ -92,7 +103,9 @@ function add(uint _x, uint _y) public returns (uint) {
   return result;
 }
 ```
+
 * Your app front-end could then listen for the event. A JavaScript implementation would look something like:
+
 ```javascript
 YourContract.IntegersAdded(function(error, result) {
   // do something with the result
@@ -106,6 +119,7 @@ YourContract.IntegersAdded(function(error, result) {
 
 ## 11. Mappings
 * A mapping is a data structure that maps keys to values.
+
 ```solidity
 // For a financial app, storing a uint that holds the user's account balance:
 mapping (address => uint) public accountBalance;
@@ -121,6 +135,7 @@ mapping (uint => string) userIdToName;
 * `require()` is a built-in function in Solidity that checks if a condition is true. If the condition is false, it will throw an error and stop the execution of the function.
 
 ## 14. Inheritance
+
 ```solidity
 contract Doge {
   function catchphrase() public returns (string memory) {
@@ -134,11 +149,13 @@ contract BabyDoge is Doge {
   }
 }
 ```
+
 * `BabyDoge` inherits from `Doge`. That means if you compile and deploy `BabyDoge`, it will have access to both `catchphrase()` and `anotherCatchphrase()` (and any other `public` functions we may define on `Doge`).
 * This can be used for logical inheritance (such as with a subclass, a Cat is an Animal). But it can also be used simply for organizing your code by grouping similar logic together into different contracts.
 
 ## 15. Imports
 When you have multiple files and you want to import one file into another, Solidity uses the `import` keyword:
+
 ```solidity
 import "./someothercontract.sol";
 
@@ -155,6 +172,7 @@ contract newContract is SomeOtherContract {
   * Variables declared inside functions are memory and will disappear when the function call ends.
   
   However, there are times when you do need to use these keywords, namely when dealing with structs and arrays within functions:
+
   ```solidity
   contract SandwichFactory {
     struct Sandwich {
@@ -194,12 +212,15 @@ contract newContract is SomeOtherContract {
 * An interface is a type in Solidity which is used to specify the functions an object must implement, without defining the implementation of those functions.
 * For our contract to talk to another contract on the blockchain that we don't own, first we need to define an interface. We declare the functions we want to use from the other contract in this interface so that our contract knows what the other contract's functions look like, how to call them, and what sort of response to expect.
 * Once we've defined an interface as:
+
 ```solidity
 contract NumberInterface {
   function getNum(address _myAddress) public view returns (uint);
 }
 ```
+
 * We can use it in a contract as follows:
+
 ```solidity
 contract MyContract {
   address NumberInterfaceAddress = 0xab38...
