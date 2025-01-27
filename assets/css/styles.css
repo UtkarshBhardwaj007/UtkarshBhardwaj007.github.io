@@ -497,15 +497,58 @@ h2 {
     border: none;
 }
 
+/* Update code block styling */
 .content pre {
-    background: #1e293b;
-    color: #e2e8f0;
-    padding: 1rem;
+    background: #1a1b26;
+    border: 1px solid #2f3549;
     border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
     overflow-x: auto;
-    margin: 1rem 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+.content pre code {
+    background: transparent;
+    color: #a9b1d6;
+    padding: 0;
+    border: none;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* Add syntax highlighting colors */
+.content pre code .keyword,
+.content pre code .type {
+    color: #bb9af7; /* purple for keywords and types */
+}
+
+.content pre code .punctuation {
+    color: #89ddff; /* light blue for punctuation */
+}
+
+.content pre code .string,
+.content pre code .number {
+    color: #9ece6a; /* green for strings and numbers */
+}
+
+.content pre code .comment {
+    color: #565f89; /* muted blue for comments */
+}
+
+/* Add a subtle gradient background */
+.content pre {
+    background: linear-gradient(145deg, #1a1b26, #24283b);
+}
+
+/* Add hover effect */
+.content pre:hover {
+    border-color: #3d59a1;
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+}
 .content pre code {
     background: transparent;
     color: inherit;
