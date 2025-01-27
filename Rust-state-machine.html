@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rust State Machine - Utkarsh Bhardwaj</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <style>
+        .content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--text);
+        }
+
+        .content h2 {
+            font-size: 1.8rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .content h3 {
+            font-size: 1.4rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--secondary);
+        }
+
+        .content p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+
+        .content ul, .content ol {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+        }
+
+        .content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .content code {
+            background: #f1f5f9;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-family: monospace;
+        }
+
+        .content pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .content pre code {
+            background: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        .content img {
+            max-width: 100%;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <a href="index.html" class="back-link">
+                <span class="icon">←</span> Back to Home
+            </a>
+
+            <h1>Rust State Machine</h1>
+
+            <h2>Dot Code School Solutions</h2>
+            <p>This repository contains my solutions for the <a href="https://dotcodeschool.com/">DotCodeSchool Courses</a>. It also contains some notes I made along the way.</p>
+
+            <h2>1. State Machine Concept:</h2>
+            <p>A state machine is a computational model that can be in exactly one of a finite number of states at any given time. It transitions between these states based on specific rules or inputs. In computing, state machines are used to model systems with well-defined, predictable behavior.</p>
+
+            <h2>2. State in Blockchain</h2>
+            <h3>2.1 Global State:</h3>
+            <p>Represents the entire data of the blockchain at a specific point in time. This includes account balances, smart contract data, and more.</p>
+            
+            <h3>2.2 State Transition Function:</h3>
+            <p>The rules that define how the blockchain moves from one state to another based on transactions.</p>
+
+            <h2>3. State Transitions:</h2>
+            <ul>
+                <li>Transactions cause state transitions</li>
+                <li>Each transaction is like an input that moves the blockchain from one valid state to another.</li>
+                <li>These transitions follow strict consensus rules.</li>
+                <li>Every node in the network applies the same state transition logic to maintain consistency</li>
+            </ul>
+
+            <h2>4. Genesis State in Blockchains:</h2>
+            <p>The Genesis State is the initial state of a blockchain. It represents the very first block, often referred to as "block 0" or the "genesis block." This block is unique because it is the only block that does not reference a previous block, as it is the starting point of the blockchain. It contains: Initial Accounts and Balances, Network Parameters, Smart Contracts and Code, and any Configuration Settings.</p>
+
+            <h2>5. Traits</h2>
+            <ul>
+                <li>Traits can contain within it two things:
+                    <ul>
+                        <li>functions which must be implemented by the type</li>
+                        <li>associated types</li>
+                    </ul>
+                </li>
+                <li>When you want to use a function or method that is defined within a trait, you need to ensure that the trait is in scope. This is because Rust requires explicit imports for trait methods to avoid ambiguity and to make the code more readable and maintainable.</li>
+            </ul>
+
+            <h2>6. Pallet</h2>
+            <p>"Pallet" is a term specific to the Polkadot SDK, which refers to Rust modules which contain logic specific for your blockchain runtime.</p>
+
+            <h2>7. &'static str</h2>
+            <p>In Rust, <code>&'static str</code> is a type that represents a string slice with a <code>'static</code> lifetime. A <code>'static</code> lifetime means that the data is either embedded directly in the program's binary (like string literals) or is explicitly allocated to last for the entire program's execution.</p>
+
+            <h2>8. Blockchain Client / Host</h2>
+            <p>The blockchain client is the software component responsible for managing the network interactions, consensus mechanism, peer-to-peer communication, transaction propagation, block production, and overall coordination of the blockchain nodes.</p>
+
+            <h2>9. State transition function / Runtime</h2>
+            <p>The state transition function defines how the blockchain's state changes in response to transactions and blocks. It encapsulates the business logic, rules, and operations that govern the blockchain's behavior. (If applicable) Manages the execution and state of smart contracts.</p>
+
+            <img src="images/blockchain-client-vs-stf.svg" alt="Blockchain Client vs STF Diagram">
+
+            <h2>10. Enums</h2>
+            <ul>
+                <li>We use enums a lot in polkadot-sdk. Take this for an example:</li>
+            </ul>
+            <pre><code>pub enum RuntimeCall {
+    Balances(balances::Call&lt;Runtime&gt;),
+}
+
+pub enum Call&lt;T: Config&gt; {
+    Transfer { to: T::AccountID, amount: T::Balance },
+}</code></pre>
+            <ul>
+                <li>In this case, we have a variant <code>RuntimeCall::Balances</code>, which itself contains a type <code>balances::Call</code>. This means we can access all the calls exposed by <code>balances:Call</code> under this variant. As we create more pallets or extend our calls (add more variants to the enum <code>call</code> in our pallets), this nested structure will scale very well. We call the <code>RuntimeCall</code> an <strong>"outer enum"</strong>, and the <code>balances::Call</code> an <strong>"inter enum"</strong>.</li>
+            </ul>
+
+            <h2>11. DotCodeSchool Lecture flow:</h2>
+
+            <h3>11.1 Balances Pallet:</h3>
+            <ul>
+                <li>At the heart of a blockchain is a state machine.</li>
+                <li>This Pallet will tell you: how much balance each user has, provide functions which allow users to transfer those balances, and even some low level functions to allow your blockchain system to manipulate those balances if needed.</li>
+                <li>We can add state to our pallet by adding fields (like balances{BTreeMap}) into our Pallet struct.</li>
+                <li>Add functions to our pallet to allow users to interact with the state.</li>
+            </ul>
+
+            <h3>11.2 System Pallet</h3>
+            <ul>
+                <li>The System Pallet is a "meta"-pallet which stores all the metadata needed for your blockchain to function. For example, the current blocknumber or the nonce of users on your blockchain.</li>
+                <li>This pallet does not need to expose any functions to end users, but can still play an important role in our overall state transition function.</li>
+                <li>System Pallet needs to expose functions which allow us to access and modify the <strong>block number</strong> and the <strong>nonce</strong>.</li>
+                <li><strong>Block number</strong>: Your blockchain's blocknumber stored in the System Pallet.</li>
+                <li><strong>Nonce</strong>: In this context, each user on your blockchain has a nonce which gives a unique value to each transaction the user submits to the blockchain. We keep track of 'nonce':'count_of_transactions' in a BTreeMap.</li>
+            </ul>
+
+            <h3>11.3 Runtime Pallet</h3>
+            <ul>
+                <li>You can think of the runtime as the accumulation of all logic which composes your state transition function. It will combine all of your pallets into a single object, and then expose that single object as the entry point for your users to interact with.</li>
+                <li>The runtime contains the <strong>System Pallet</strong> and the <strong>Balances Pallet</strong>.</li>
+            </ul>
+
+            <h3>11.4 Using Named And Generic Types and making them configurable:</h3>
+            <ul>
+                <li>We use named types to clearly define what a type represents. We make these named types generic so that we can use them with different types.</li>
+                <li>We implement a <code>Config</code> trait with associated types. Then we can use a single generic parameter <code>T</code> in our structs and have a trait bound of <code>Config</code> on <code>T</code>. This way, we can access data types from <code>T</code> like <code>T::AccountId</code> and <code>T::Balance</code> in our structs.</li>
+                <li>We can also use <strong>Trait Inheritance</strong> to keep the repetition to a minimum like - <code>pub trait Config: crate::system::Config {}</code>. However, we need to be aware of any <strong>Tight Coupling</strong>. In fact, with Substrate, all pallets are tightly coupled to the System Pallet, because the System Pallet provides all the meta-types for your blockchain system.</li>
+            </ul>
+
+            <h3>11.5 Support Pallet</h3>
+            <ul>
+                <li>The <code>support</code> module parallels something similar to the <code>frame_support</code> crate that you would find in the <code>Polkadot SDK</code>. The reason the <code>frame_support</code> crate exists, is to allow multiple other crates use common types and trait, while avoiding cyclic dependencies, which is not allowed in Rust.</li>
+                <li>The first set of primitives provided by the support module are a set of structs that we need to construct a simple Block in a Blockchain. We keep the Block completely generic over the Header and Extrinsic type.</li>
+            </ul>
+
+            <h4>11.5.1 Block</h4>
+            <p>A block is basically broken up into two parts: the header and a vector of extrinsics.</p>
+
+            <h5>11.5.1.1 Header</h5>
+            <p>The block header contains metadata about the block which is used to verify that the block is valid. In our simple state machine, we only store the blocknumber in the header, but real blockchains like Polkadot have:</p>
+            <ul>
+                <li>Parent Hash</li>
+                <li>Block Number</li>
+                <li>State Root</li>
+                <li>Extrinsics Root</li>
+                <li>Consensus Digests / Logs</li>
+            </ul>
+
+            <h5>11.5.1.2 Extrinsics</h5>
+            <ul>
+                <li>In our simple state machine, extrinsics are synonymous with user transactions. Thus our extrinsic type is composed of a Call (the function we will execute) and a Caller (the account that wants to execute that function).Real world blockchains like Polkadot have many different types of extrinsics.</li>
+            </ul>
+
+            <h4>11.5.2 Dispatching Calls</h4>
+            <ul>
+                <li>The runtime, acting as a single entrypoint for the whole state transition function needs to be able to route incoming calls to the appropriate functions in the appropriate pallets. For this, we need the <code>Dispatch</code> trait and the <code>DispatchResult</code>.</li>
+                <li><strong>Runtime Calls</strong> are an accumulation of all the calls which are exposed to the world. This is useful as a <code>type</code> as we can have mappings like <code>call</code> and <code>caller</code> where the <code>call</code> could be of one of the types in <code>RuntimeCalls</code>.</li>
+                <li>We also define concrete types for the <code>Block</code>, <code>Header</code>, and <code>Extrinsic</code> types.</li>
+                <li>We implement the <code>Dispatch</code> trait for all pallets. Then we can use a <strong>nested</strong> <code>dispatch</code> function to route calls to the appropriate pallet. This way when the pallet code gets updated, we don't have to update anything in the runtime as it would just forward the call to the updated dispatch function in the pallet.</li>
+            </ul>
+
+            <h3>11.6 Proof of Existence Pallet</h3>
+            <ul>
+                <li>The Proof of Existence Pallet uses the blockchain to provide a secure and immutable ledger that can be used to verify the existence of a particular document or piece of data at a specific point in time as the blockchain acts as an immutable ledger whose history cannot be changed.</li>
+                <li>We use a <code>BTreeMap</code> for storage here. In actual blockchains like <code>PolkaDot</code>, there usually is a storage layer that is used to store the data. Rather than having a map from accounts to some data, we will actually map the content we want to claim to the user who owns it. This construction of content -> account allows an account to be the owner of multiple different claims, but having each claim only be owned by one user.</li>
+                <li>Remember that when we create the <code>call enum</code> in each pallet, we don't need to pass the caller data in the enum variants. The <code>caller</code> is provided by the <code>dispatch</code> logic.</li>
+            </ul>
+
+            <h3>11.7 Macros in polkadot-sdk</h3>
+            <p>All the pallets and the runtime follow a certain pattern and thus we can write and use <code>macros</code> for them.</p>
+
+            <h4>11.7.1 The Call Macro</h4>
+            <ul>
+                <li>The purpose of the <code>#[macros::call]</code> macro is to automatically generate the <code>enum Call</code> from the functions of the pallet and the pallet level <code>Dispatch</code> logic found in each Pallet.</li>
+                <li>We can place the <code>#[macros::call]</code> attribute over our <code>impl&lt;T: Config&gt; Pallet&lt;T&gt;</code> where the callable functions are implemented. From there, the macro can parse the whole object, and extract the data it needs. Not all of your functions are intended to be callable, so you can isolate the functions which should be "callable" in their own <code>impl&lt;T: Config&gt; Pallet&lt;T&gt;</code>.</li>
+                <li>The Call macro has 2 main files:
+                    <ul>
+                        <li><strong>Parse</strong>:
+                            <ul>
+                                <li>In order to generate the code that we want, we need to keep track of each <code>callable function</code> (name of that function, each argument name and types) that the developer wants to expose through the Runtime and the name of the <code>struct</code> where those functions are implemented. Normally this is <code>Pallet</code>, but we can allow the developer flexibility in their naming.</li>
+                                <li>These things are tracked with <code>CallDef</code> and <code>CallVariantDef</code></li>
+                                <li>Also, during the parsing process, we might want to check for certain consistencies in the code being parsed. In this case, we require that every callable function muse have <code>caller</code> as their first parameter with <code>type T::AccountId</code>. This checking logic is handled by <code>fn check_caller_arg</code>.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Expand</strong>:
+                            <ul>
+                                <li>Once we have parsed all the data we need, generating the code is straight forward. If you jump down to <code>let dispatch_impl = quote!</code> you will see a bunch of code that looks like the templates we used earlier in the tutorial. We just left markers where the macro generation logic should place all the information to write the code we need.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>Rust provides the command <code>cargo expand</code> which allows you to output the generated rust code after all macros have been applied to your project.</li>
+            </ul>
+
+            <h4>11.7.2 The Runtime Macro</h4>
+            <ul>
+                <li>The purpose of the <code>#[macros::runtime]</code> macro is to get rid of all of the boilerplate function we implemented for the <code>Runtime</code>, including <code>fn new()</code> and <code>fn execute_block()</code>. Similar to the <code>Call</code> macro, it also generates the <code>enum RuntimeCall</code> and all the <code>Dispatch</code> logic for re-dispatching to pallets.</li>
+                <li><strong>NOTE</strong>: It appears that the <code>Runtime</code> macro and the <code>Call</code> macro both get rid of the <code>enum call</code> and the <code>Dispatch</code> logic.</li>
+                <li><strong>NOTE</strong>: Due to the quirks of using macros, our <code>RuntimeCall</code> or <code>Call</code> enum (from the <code>Balances</code> Pallet) will have snake_case variants which exactly match the name of the fields in the Runtime struct.</li>
+                <li>We apply the <code>#[macros::runtime]</code> attribute on top of the main <code>struct Runtime</code> object.</li>
+                <li>The Runtime macro has 2 main files:
+                    <ul>
+                        <li><strong>Parse</strong>:
+                            <ul>
+                                <li>In order to generate the code we want, we need to keep track of: The name of the struct representing our Runtime. Usually this is <code>Runtime</code>, but we provide flexibility to the developer, The list of Pallets included in our <code>Runtime</code>, Their name, as specified by the user and The specific type for their <code>Pallet</code>, for example <code>balances::Pallet</code> vs <code>proof_of_existence::Pallet</code>.</li>
+                                <li>All of this information is tracked in the <code>RuntimeDef</code> struct. We are also checking that our <code>Runtime</code> definition always contains the <code>System Pallet</code>, and does so as the first pallet in our <code>Runtime</code> definition.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Expand</strong>:
+                            <ul>
+                                <li>Starting with <code>let runtime_impl = quote!</code>, you will see the entire <code>impl Runtime</code> code block has been swallowed into the macro. Since we know all the pallets in your <code>Runtime</code>, we can automatically implement functions like <code>new()</code>. The <code>execute_block</code> function does not take advantage of any of the parsed data, but the code is completely boilerplate, so we hide it away.</li>
+                                <li>We have another code block being generated with <code>let dispatch_impl = quote!</code> which is the <code>enum RuntimeCall</code> and the implementation of <code>Dispatch</code> for <code>Runtime</code>.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
