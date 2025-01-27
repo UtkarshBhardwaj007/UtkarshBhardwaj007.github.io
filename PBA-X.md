@@ -48,10 +48,13 @@ A cryptographic system should be secure even if everything about the system, exc
 * A hash chain is a fundamental data structure used in blockchains to ensure the integrity and immutability of data. It is a sequence of blocks (objects), each containing data and a cryptographic hash of the previous block, forming a chain (could be anything like vector or list). This structure ensures that any alteration in a block would require changes to all subsequent blocks, making it tamper-evident.
 * Most blockchain implementations (including major ones like Bitcoin) store blocks in a database or vector and use the hash values for validation, not traversal.
 
-### 1.6.2 Merkle Trees
+### 1.6.2 Merkle Tries
 * Merkle tree also known as hash tree is a data structure used for data verification and synchronization. 
 * It is a tree data structure where each non-leaf node is a hash of it’s child nodes. All the leaf nodes are at the same depth and are as far left as possible. 
 * Each transaction gets hashed, Hashes are paired and hashed again, Process repeats until single root hash, Root hash goes in block header of the blockchain block.
+* It is called a `merkle "trie"` because the trie data structure is used to reduce the amount of redundant data stored in the tree.
+* Whereas reading and writing to a database could be considered `O(1)`, a merklized database has read and write complexity of `O(log N)`, where `N` is the total number of items stored in the database.
+* The primary advantage of using a merkle trie is that proving specific data exists inside the database is much more efficient! Whereas you would normally need to share the `whole database` to prove that some data exists, with a merklized database, you only need to share `O(log N)` amount of data. This is very important to support `light clients`.
 
 ![Diagram Description](images/merkle-tree.png)
 
