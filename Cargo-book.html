@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Cargo Book - Utkarsh Bhardwaj</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <a href="index.html" class="back-link">
+                <span class="icon">←</span> Back to Home
+            </a>
+
+            <h1>The Cargo Book</h1>
+
+            <h2>1. Project Structure</h2>
+            <ul>
+                <li>The default library file is <code>src/lib.rs</code></li>
+                <li>The default executable file is <code>src/main.rs</code></li>
+                <li>Other executables can be placed in <code>src/bin/</code></li>
+            </ul>
+
+            <h2>2. Testing</h2>
+            <p>Cargo looks for tests in two locations:</p>
+            <ol>
+                <li><strong>Source Files (<code>src/</code>)</strong>
+                    <ul>
+                        <li>Unit tests</li>
+                        <li>Documentation tests</li>
+                    </ul>
+                </li>
+                <li><strong>Tests Directory (<code>tests/</code>)</strong>
+                    <ul>
+                        <li>Integration tests</li>
+                        <li>Requires importing crates</li>
+                    </ul>
+                </li>
+            </ol>
+
+            <h3>2.1 Test Features</h3>
+            <ul>
+                <li><code>cargo test</code> runs:
+                    <ul>
+                        <li>Regular tests</li>
+                        <li>Compilation of examples</li>
+                        <li>Documentation tests</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h2>3. CI/CD</h2>
+            <p>For GitHub Actions CI, workflow is created in <code>.github/workflows/ci.yml</code></p>
+
+            <h2>4. Package Management</h2>
+            
+            <h3>4.1 Version Control</h3>
+            <ul>
+                <li><strong>Yanking</strong>:
+                    <ul>
+                        <li>Marks a version as invalid for new dependencies</li>
+                        <li>Existing dependencies continue working</li>
+                        <li>Does not delete code</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>4.2 Dependencies</h3>
+            <p>Cargo home:</p>
+            <ul>
+                <li>Default location: <code>$HOME/.cargo/</code></li>
+                <li>Stores downloaded build dependencies</li>
+            </ul>
+
+            <h3>4.3 Cargo.toml Configuration</h3>
+            <pre><code>[dependencies]        # Package library dependencies
+[dev-dependencies]   # Dependencies for examples, tests, and benchmarks</code></pre>
+
+            <h3>4.4 Package Components</h3>
+            <p>Targets correspond to source files compilable into crates</p>
+            <p>Types of targets:</p>
+            <ul>
+                <li>Library</li>
+                <li>Binary</li>
+                <li>Example</li>
+                <li>Test</li>
+                <li>Benchmark</li>
+            </ul>
+
+            <h3>4.5 Workspace Features</h3>
+            <ul>
+                <li>Features enabled in <code>[workspace.dependencies]</code> apply to all workspace packages</li>
+                <li>Dependencies can be marked "optional":
+                    <ul>
+                        <li>Not compiled by default</li>
+                        <li>Implicitly defines a feature</li>
+                        <li>Included only when feature is enabled</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
