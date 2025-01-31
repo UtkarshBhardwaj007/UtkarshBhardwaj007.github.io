@@ -175,7 +175,7 @@ These are used in consensus mechanisms to filter out chains until we find the ca
 * There is no risk of reverting a block.
 
 #### 2.5.3.3 GRANDPA
-* GRANDPA is responsible for finalising blocks in polkadot.
+* `GRANDPA` is responsible for finalising blocks in polkadot.
 * Polkadot uses a two-phase voting system (`Hybrid Consensus Model`) to reach finality. It separates the block production from block finality.
 
 ### 2.5.4 Forks in Blockchain
@@ -341,3 +341,97 @@ In Polkadot SDK based blockchains, the transactions (extrinsics) can be:
   * **Events**: These are the events that the pallet emits. They can be used to notify users of important events, such as a balance change.
   * **Errors**: These are the errors that the pallet can return. They can be used to indicate that a call failed.
   * **Hooks**: Hooks allow you to define logic that runs at specific points in the lifecycle of a block such as the beginning or end of a block.
+
+# 6. XCM
+* **XCM** (Cross-Chain Messaging) is a **language** for communicating **intentions** between **Consensus Systems**. It allows different blockchains to communicate with each other. It is a way for different blockchains to interact with each other, such as transferring assets, executing smart contracts, or performing other tasks that don't require consensus.
+* XCM adheres to four guiding principles that ensure robust and reliable communication across consensus systems:
+  * **Asynchronous** - XCM messages operate independently of sender acknowledgment, avoiding delays due to blocked processes
+  * **Absolute** - XCM messages are guaranteed to be delivered and interpreted accurately, in order, and timely. Once a message is sent, one can be sure it will be processed as intended
+  * **Asymmetric** - XCM messages follow the 'fire and forget' paradigm meaning no automatic feedback is provided to the sender. Any results must be communicated separately to the sender with an additional message back to the origin
+  * **Agnostic** - XCM operates independently of the specific consensus mechanisms, making it compatible across diverse systems.
+
+# 7. Parachains
+* Parachains are Polkadot's unique version of shards or roll-ups functioning as parallel block chains that independently run and process transactions.
+* Parachain network maintains its own blockchain and state. Polkadot validators process the parachain blocks and hold them for a short time (24 hours) for data availability for approvals and disputes processing. The Polkadot relay chain only stores a shortened digest of the parachain block. Storing the whole blocks indefinitely would bloat the Polkadot blockchain and beats the purpose of sharding.
+
+## 7.1 Collators
+* **Parachain-Specific Nodes**: Collators are nodes specific to a parachain, not randomly selected from the Polkadot Relay Chain. They maintain the full state of their parachain, collect transactions, and produce blocks for validation.
+* **Block Authors**: They act as block producers (similar to "miners" or "validators" in other chains) for their parachain, creating candidate blocks to be validated by Polkadot's Relay Chain validators.
+* If you create a parachain, you must run your own collator nodes. Polkadot does not provide collators; they are the responsibility of the parachain team. Collators ensure the parachain remains operational by producing blocks and interacting with the Relay Chain.
+
+## 7.2 Backing Group / Polkadot Core / Execution Core
+* A **subset** of Polkadot’s Relay Chain validators (randomly assigned to parachains) verifies parachain blocks. They check validity and availability before inclusion in the Relay Chain.
+* **Consensus Finalization**: While collators produce blocks, finality is achieved only after Relay Chain validators approve them. This ensures shared security across Polkadot.
+
+![Diagram Description](images/storage-relay-vs-parachain.svg)
+
+## 7.3 Parachain Block Validation and Inclusion
+
+```
+                            Polkadot Data Availability Process
+                                     +-----------------------+
+                                     |     Parachain Block    |
+                                     | (Collation by Collator)|
+                                     +-----------+-----------+
+                                                 |
+                                                 v
+                                     +-----------------------+
+                                     |   Backing Group       |
+                                     | (Validate Correctness)|
+                                     +-----------+-----------+
+                                                 |
+                                                 v
+                                     +-----------------------+
+                                     | Reed-Solomon Erasure  |
+                                     | Coding & Distribution |
+                                     +-----------+-----------+
+                                                 |
+                                                 v
+               +---------------------+--------------------------+---------------------+
+               |                     |                          |                     |
+               v                     v                          v                     v
+      +----------------+   +----------------+         +----------------+   +----------------+
+      | Validator 1    |   | Validator 2    |   ...   | Validator N    |   | Validator N+1  |
+      | (Chunk Storage)|   | (Chunk Storage)|         | (Chunk Storage)|   | (Chunk Storage)|
+      +----------------+   +----------------+         +----------------+   +----------------+
+                                                 |
+                                                 v
+                                     +-----------------------+
+                                     | Relay Chain Block     |
+                                     | - Parachain Header    |
+                                     | - Erasure-Coded Root  |
+                                     | - Validity Proofs     |
+                                     +-----------------------+
+```
+
+### 7.3.1 Overview
+After a collator creates a parachain block (collation), it undergoes two critical stages before being included in the Relay Chain block:
+1. **Backing Process**: The collation is validated by a subset of Relay Chain validators (the backing group) to ensure correctness.
+2. **Data Availability Stage**: Ensures the collation’s data is stored redundantly across the network so it can be reconstructed later if needed.
+3. **Approval Checking and Disputes**: A **random subset of validators** (not in the backing group) is selected to re-check the block. Validators submit approval votes to the Relay Chain. If there is even one validator which rejected the collation, it creates a `Dispute` and all validators in the relay chain then verify the collation and the stake of the malicious actor gets slashed.
+4. **Finalization**: In the end, the block is finalized via `GRANDPA` (Polkadot’s finality gadget). `GRANDPA` would never finalize a disputed block.
+
+### 7.3.2 Collation vs PoV (Proof of Validity) Block
+Key Differences
+Aspect	Collation	Proof of Validity (PoV)
+Content	Transactions, state changes, block data.	Cryptographic proof of the collation’s validity.
+Created By	Collators (parachain-specific nodes).	Collators (using the parachain’s logic).
+Role in Validation	Raw data to be validated.	Enables efficient validation by Relay Chain.
+Storage	Stored on parachain nodes.	Submitted to Relay Chain alongside collations.
+Dependency	Standalone block data.	Dependent on the collation it proves.
+
+### 7.3.3 Key Steps
+* **`Reed-Solomon Erasure Coding`**: The parachain block data is split into N chunks and encoded into 2N chunks using Reed-Solomon codes. Even if up to N chunks are lost, the original data can still be recovered.
+  * **Why?**: To prevent data withholding attacks (e.g., a malicious validator hiding data to break consensus).
+  * **Distribution**: Chunks are distributed to all Relay Chain validators, not just the backing group.
+
+* **`Data Availability Confirmation`**: Validators attest that they’ve received their assigned chunks. Once a threshold of validators (e.g., 2/3) confirms availability, the collation is marked as "available."
+
+* **Inclusion in the Relay Chain**: The Relay Chain does not store the full parachain block. Instead, it stores:
+  * `Parachain Block Header`: A condensed summary of the parachain block.
+  * `Erasure-Coded Root`: A cryptographic commitment (e.g., Merkle root) to the erasure-coded chunks. Proof that the parachain block data is available and recoverable.
+  * `Validity Attestations`: Signatures from the backing group confirming the block’s validity.
+
+![Diagram Description](images/data-availability-from-parachains.svg)
+
+
