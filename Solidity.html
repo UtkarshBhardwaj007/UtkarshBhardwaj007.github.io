@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solidity with CryptoZombies - Utkarsh Bhardwaj</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <a href="index.html" class="back-link">
+                <span class="icon">←</span> Back to Home
+            </a>
+
+            <h1>Solidity with CryptoZombies</h1>
+
+            <h2>1. Contracts</h2>
+            <ul>
+                <li>Solidity's code is encapsulated in contracts. A <code>contract</code> is the fundamental building block of Ethereum applications — all variables and functions belong to a contract.</li>
+            </ul>
+
+            <h2>2. Version Pragma</h2>
+            <ul>
+                <li>All solidity source code should start with a <code>version pragma</code> — a declaration of the version of the Solidity compiler this code should use. This is to prevent issues with future compiler versions potentially introducing changes that would break your code.</li>
+            </ul>
+
+            <h2>3. State Variables</h2>
+            <ul>
+                <li>State variables are permanently stored in contract storage. This means they're written to the Ethereum blockchain.</li>
+            </ul>
+
+            <h2>4. <code>uint</code></h2>
+            <ul>
+                <li>In Solidity, uint is actually an alias for <code>uint256</code>, a 256-bit unsigned integer. You can declare <code>uint</code> with less bits — <code>uint8</code>, <code>uint16</code>, <code>uint32</code>, etc.. But in general you want to simply use <code>uint</code>. There's also an <code>int</code> data type for signed integers.</li>
+            </ul>
+
+            <h2>5. <code>public</code></h2>
+            <ul>
+                <li><code>public</code> is an access modifier. It means that Solidity automatically creates a function that allows you to access the variable from outside of the contract.</li>
+            </ul>
+
+            <pre><code class="language-solidity">// example public array
+Person[] public people;</code></pre>
+
+            <h2>6. Arrays</h2>
+            <ul>
+                <li>There are two types of arrays in Solidity: fixed arrays and dynamic arrays:
+                    <ul>
+                        <li>Fixed arrays: <code>uint[3]</code></li>
+                        <li>Dynamic arrays: <code>uint[]</code></li>
+                    </ul>
+                </li>
+                <li><code>array.push()</code> returns a uint of the new length of the array</li>
+            </ul>
+
+            <h2>7. Functions</h2>
+            <ul>
+                <li>A function declaration in solidity looks like the following:</li>
+            </ul>
+
+            <pre><code class="language-solidity">function eatHamburgers(string memory _name, uint _amount) public {}</code></pre>
+
+            <ul>
+                <li>Functions may have <code>Visibility Modifiers</code>. Note that we're specifying the function visibility as <code>public</code>. We're also providing instructions about where the <code>_name</code> variable should be stored - in <code>memory</code>.</li>
+                <li>In addition to <strong><code>public</code></strong> and <strong><code>private</code></strong>, <code>Solidity</code> has two more types of visibility for functions: <strong><code>internal</code></strong> and <strong><code>external</code></strong>.</li>
+                <li><code>internal</code> is the same as <code>private</code>, except that it's also accessible to contracts that inherit from this contract.</li>
+                <li><code>external</code> is similar to <code>public</code>, except that these functions can <strong>ONLY</strong> be called outside the contract — they can't be called by other functions inside that contract.</li>
+                <li>In Solidity you can return <strong>more than one</strong> value from a function.</li>
+                <li>It's convention to start private function names and any function parameters with an underscore <code>_</code>:</li>
+            </ul>
+
+            <pre><code class="language-solidity">function _addToArray(uint _number) private {
+  numbers.push(_number);
+}</code></pre>
+
+            <ul>
+                <li><strong>Return Values</strong>: Functions can return values. You can specify the type of the return value by adding it after the parameter list and access modifier:</li>
+            </ul>
+
+            <pre><code class="language-solidity">string greeting = "What's up dog";
+
+function sayHello() public returns (string memory) {
+  return greeting;
+}</code></pre>
+
+            <ul>
+                <li><strong>View Functions</strong> (<code>State Modifier</code>): If a function is only reading data from the blockchain, you can mark it as <code>view</code>. This will save you some gas. <code>view</code> functions don't cost any gas when they're called externally by a user. <strong>NOTE</strong> that if a <code>view</code> function is called internally from another function in the same contract that is not a view function, it will still cost gas. This is because the other function creates a transaction on Ethereum, and will still need to be verified from every node. So view functions are only free when they're called externally.:</li>
+            </ul>
+
+            <pre><code class="language-solidity">function sayHello() public view returns (string memory) {}</code></pre>
+
+            <ul>
+                <li><strong>Pure Functions</strong> (<code>State Modifier</code>): If a function doesn't read from the blockchain at all (i.e., it only depends on its parameters), you can mark it as <code>pure</code>. This will save you even more gas:</li>
+            </ul>
+
+            <pre><code class="language-solidity">function _multiply(uint a, uint b) private pure returns (uint) {
+  return a * b;
+}</code></pre>
+
+<h2>8. Keccak256 and Typecasting</h2>
+            <ul>
+                <li>Keccak256 is a hash function used in Ethereum. It takes in a variable number of <code>bytes</code> and returns a 256-bit hash (32 bytes). It takes in just one parameter of type <code>bytes</code>. This means that we have to <code>"pack"</code> any parameters before calling keccak256:</li>
+            </ul>
+
+            <pre><code class="language-solidity">//6e91ec6b618bb462a4a6ee5aa2cb0e9cf30f7a052bb467b0ba58b8748c00d2e5
+keccak256(abi.encodePacked("aaaab"));</code></pre>
+
+            <ul>
+                <li>Typecasting is the process of converting one data type to another. In Solidity, we can typecast a variable by putting the type we want to convert to in <code>parentheses</code> before the variable:</li>
+            </ul>
+
+            <pre><code class="language-solidity">uint8 a = 5;
+uint b = 6;
+// throws an error because a * b returns a uint, not uint8:
+uint8 c = a * b;
+// we have to typecast b as a uint8 to make it work:
+uint8 c = a * uint8(b);</code></pre>
+
+            <h2>9. Events</h2>
+            <ul>
+                <li>Events allow you to emit log data to the Ethereum blockchain. You can subscribe to these events with client-side code. Events are a way for your contract to communicate that something happened on the blockchain to your app front-end, which can be 'listening' for certain events and take action when they happen:</li>
+            </ul>
+
+            <pre><code class="language-solidity">// declare the event
+event IntegersAdded(uint x, uint y, uint result);
+
+function add(uint _x, uint _y) public returns (uint) {
+  uint result = _x + _y;
+  // fire an event to let the app know the function was called:
+  emit IntegersAdded(_x, _y, result);
+  return result;
+}</code></pre>
+
+            <ul>
+                <li>Your app front-end could then listen for the event. A JavaScript implementation would look something like:</li>
+            </ul>
+
+            <pre><code class="language-javascript">YourContract.IntegersAdded(function(error, result) {
+  // do something with the result
+})</code></pre>
+
+            <h2>10. Accounts</h2>
+            <ul>
+                <li>In ETH blockchain, each account has an address, which you can think of like a bank account number. It's a unique identifier that points to that account.</li>
+                <li>An <code>address</code> is owned by a specific <code>user</code> (or a <code>smart contract</code>).</li>
+                <li>In crypto-zombies tutorial, when a user creates new zombies by interacting with our app, we set ownership of those zombies to the Ethereum address that called the function.</li>
+            </ul>
+
+            <h2>11. Mappings</h2>
+            <ul>
+                <li>A mapping is a data structure that maps keys to values.</li>
+            </ul>
+
+            <pre><code class="language-solidity">// For a financial app, storing a uint that holds the user's account balance:
+mapping (address => uint) public accountBalance;
+// Or could be used to store / lookup usernames based on userId
+mapping (uint => string) userIdToName;</code></pre>
+<h2>12. msg.sender</h2>
+            <ul>
+                <li><strong>NOTE</strong>: In Solidity, there are certain global variables that are available to all functions. One of these is <code>msg.sender</code>, which refers to the <code>address</code> of the person (or smart contract) who called the current function.</li>
+                <li><strong>NOTE</strong>: In Solidity, function execution always needs to start with an external caller. A contract will just sit on the blockchain doing nothing until someone calls one of its functions. So there will always be a <code>msg.sender</code>.</li>
+            </ul>
+
+            <h2>13. require()</h2>
+            <ul>
+                <li><code>require()</code> is a built-in function in Solidity that checks if a condition is true. If the condition is false, it will throw an error and stop the execution of the function.</li>
+            </ul>
+
+            <h2>14. Inheritance</h2>
+            <pre><code class="language-solidity">contract Doge {
+  function catchphrase() public returns (string memory) {
+    return "So Wow CryptoDoge";
+  }
+}
+
+contract BabyDoge is Doge {
+  function anotherCatchphrase() public returns (string memory) {
+    return "Such Moon BabyDoge";
+  }
+}
+
+// contract can inherit from multiple contracts
+contract SatoshiNakamoto is NickSzabo, HalFinney {
+  // Omg, the secrets of the universe revealed!
+}</code></pre>
+
+            <ul>
+                <li><code>BabyDoge</code> inherits from <code>Doge</code>. That means if you compile and deploy <code>BabyDoge</code>, it will have access to both <code>catchphrase()</code> and <code>anotherCatchphrase()</code> (and any other <code>public</code> functions we may define on <code>Doge</code>).</li>
+                <li>This can be used for logical inheritance (such as with a subclass, a Cat is an Animal). But it can also be used simply for organizing your code by grouping similar logic together into different contracts.</li>
+            </ul>
+
+            <h2>15. Imports</h2>
+            <p>When you have multiple files and you want to import one file into another, Solidity uses the <code>import</code> keyword:</p>
+
+            <pre><code class="language-solidity">import "./someothercontract.sol";
+
+contract newContract is SomeOtherContract {
+
+}</code></pre>
+
+            <h2>16. Storage vs Memory (Data location)</h2>
+            <ul>
+                <li>Variables can be stored either in <code>storage</code> or <code>memory</code>.</li>
+                <li><code>Storage</code> refers to variables stored permanently on the blockchain. <code>Memory</code> variables are temporary, and are erased between external function calls to your contract.</li>
+                <li>Most of the time you don't need to use these keywords because Solidity handles them by default:</li>
+                <ul>
+                    <li><strong><code>State variables</code></strong> (variables declared outside of functions) are by default <code>storage</code> and written permanently to the blockchain.</li>
+                    <li>Variables declared inside functions are memory and will disappear when the function call ends.</li>
+                </ul>
+                <li>However, there are times when you do need to use these keywords, namely when dealing with structs and arrays within functions:</li>
+            </ul>
+
+            <pre><code class="language-solidity">contract SandwichFactory {
+  struct Sandwich {
+    string name;
+    string status;
+  }
+
+  Sandwich[] sandwiches;
+
+  function eatSandwich(uint _index) public {
+    // Sandwich mySandwich = sandwiches[_index];
+
+    // ^ Seems pretty straightforward, but solidity will give you a warning
+    // telling you that you should explicitly declare `storage` or `memory` here.
+
+    // So instead, you should declare with the `storage` keyword, like:
+    Sandwich storage mySandwich = sandwiches[_index];
+    // ...in which case `mySandwich` is a pointer to `sandwiches[_index]`
+    // in storage, and...
+    mySandwich.status = "Eaten!";
+    // ...this will permanently change `sandwiches[_index]` on the blockchain.
+
+    // If you just want a copy, you can use `memory`:
+    Sandwich memory anotherSandwich = sandwiches[_index + 1];
+    // ...in which case `anotherSandwich` will simply be a copy of the
+    // data in memory, and...
+    anotherSandwich.status = "Eaten!";
+    // ...will just modify the temporary variable and have no effect
+    // on `sandwiches[_index + 1]`. But you can do this:
+    sandwiches[_index + 1] = anotherSandwich;
+    // ...if you want to copy the changes back into blockchain storage.
+  }
+}</code></pre>
+
+            <ul>
+                <li><strong>Storage is Expensive</strong>: Writing to <code>storage</code> is one of the most expensive operations in Solidity. In order to keep costs down, you want to avoid writing data to storage except when absolutely necessary. Sometimes this involves seemingly inefficient programming logic — like rebuilding an array in <code>memory</code> every time a function is called instead of simply saving that array in a variable for quick lookups.</li>
+            </ul>
+
+            <img src="images/data-locations-in-solidity.svg" alt="Diagram Description">
+
+            <h2>17. Interfaces</h2>
+            <ul>
+                <li>An interface is a type in Solidity which is used to specify the functions an object must implement, without defining the implementation of those functions.</li>
+                <li>For our contract to talk to another contract on the blockchain that we don't own, first we need to define an interface. We declare the functions we want to use from the other contract in this interface so that our contract knows what the other contract's functions look like, how to call them, and what sort of response to expect.</li>
+                <li>Once we've defined an interface as:</li>
+            </ul>
+
+            <pre><code class="language-solidity">contract NumberInterface {
+  function getNum(address _myAddress) public view returns (uint);
+}</code></pre>
+
+            <ul>
+                <li>We can use it in a contract as follows:</li>
+            </ul>
+
+            <pre><code class="language-solidity">contract MyContract {
+  address NumberInterfaceAddress = 0xab38...
+  // ^ The address of the FavoriteNumber contract on Ethereum
+  NumberInterface numberContract = NumberInterface(NumberInterfaceAddress);
+  // Now `numberContract` is pointing to the other contract
+
+  function someFunction() public {
+    // Now we can call `getNum` from that contract:
+    uint num = numberContract.getNum(msg.sender);
+    // ...and do something with `num` here
+  }
+}</code></pre>
+
+            <h2>18. OpenZeppelin</h2>
+            <ul>
+                <li><code>OpenZeppelin</code> is a collection of open-source smart contracts that provide common patterns and best practices for building secure and scalable Ethereum applications.</li>
+                <li><code>Ownable</code> is a popular contract from <code>OpenZeppelin</code> that provides a simple way to restrict access to a contract's functions to only the contract's owner. <code>Ownable</code> contract basically does the following:</li>
+                <ul>
+                    <li>When a contract is created, its constructor sets the owner to <code>msg.sender</code> (the person who deployed it)</li>
+                    <li>It adds an <code>onlyOwner</code> modifier, which can restrict access to certain functions to only the <code>owner</code>.</li>
+                    <li>It allows you to transfer the contract to a new <code>owner</code></li>
+                </ul>
+            </ul>
+
+            <h2>19. Function Modifiers (<code>modifier</code>)</h2>
+            <ul>
+                <li>A function modifier looks just like a function, but uses the keyword <code>modifier</code> instead of the keyword <code>function</code>. And it can't be called directly like a function can — instead we can attach the modifier's name at the end of a function definition to change that function's behavior:</li>
+            </ul>
+
+            <pre><code class="language-solidity">contract Ownable {
+  ...
+  modifier onlyOwner() {
+    require(isOwner());
+    _;
+  }
+  ...
+  function renounceOwnership() public onlyOwner {
+    emit OwnershipTransferred(_owner, address(0));
+    _owner = address(0);
+  }
+}</code></pre>
+
+            <ul>
+                <li>When you call <code>renounceOwnership</code>, the code inside <code>onlyOwner</code> executes first. Then when it hits the <code>_;</code> statement in <code>onlyOwner</code>, it goes back and executes the code inside <code>renounceOwnership</code>.</li>
+                <li>Function modifiers can also take <strong>arguments</strong>:</li>
+            </ul>
+
+            <pre><code class="language-solidity">// A mapping to store a user's age:
+mapping (uint => uint) public age;
+
+// Modifier that requires this user to be older than a certain age:
+modifier olderThan(uint _age, uint _userId) {
+  require(age[_userId] >= _age);
+  _;
+}
+
+// Must be older than 16 to drive a car (in the US, at least).
+// We can call the `olderThan` modifier with arguments like so:
+function driveCar(uint _userId) public olderThan(16, _userId) {
+  // Some function logic
+}</code></pre>
+
+            <ul>
+                <li>The <code>olderThan</code> modifier takes arguments just like a function does. And that the <code>driveCar</code> function passes its arguments to the modifier.</li>
+            </ul>
+
+<h2>20. Gas</h2>
+            <ul>
+                <li>Gas is a measure of how much computational power a transaction uses. It's a way to limit the amount of resources a transaction can use, which helps prevent abuse and ensures that the network remains stable.</li>
+                <li>Normally there's no benefit to using sub-types of <code>uint</code> (<code>uint8</code>, <code>uint16</code>, <code>uint32</code>, etc.) because Solidity reserves <code>256</code> bits of storage regardless of the <code>uint</code> size. For example, using <code>uint8</code> instead of <code>uint</code> (<code>uint256</code>) won't save you any gas. But there's an exception to this: inside <code>structs</code>. If you have multiple <code>uint</code> inside a <code>struct</code>, using a smaller-sized <code>uint</code> when possible will allow Solidity to pack these variables together to take up less storage.</li>
+                <li>You'll also want to cluster identical data types together (i.e. put them next to each other in the struct) so that Solidity can minimize the required storage space.</li>
+            </ul>
+
+            <h2>21. Passing structs as arguments</h2>
+            <p>You can pass a <code>storage pointer</code> to a <code>struct</code> as an argument to a <code>private</code> or <code>internal</code> function. This way we can pass a <code>reference</code> to our zombie into a function instead of passing in a zombie ID and looking it up:</p>
+
+            <pre><code class="language-solidity">function _doStuff(Zombie storage _zombie) internal {
+  // do stuff with _zombie
+}</code></pre>
+
+            <h2>22. The <code>payable</code> Modifier</h2>
+            <ul>
+                <li>The <code>payable</code> modifier allows a function to receive Ether. This is useful for functions that need to pay for gas or for functions that need to receive payments from users. e.g:</li>
+            </ul>
+
+            <pre><code class="language-solidity">contract OnlineStore {
+  function buySomething() external payable {
+    // Check to make sure 0.001 ether was sent to the function call:
+    require(msg.value == 0.001 ether);
+    // If so, some logic to transfer the digital item to the caller of the function:
+    transferThing(msg.sender);
+  }
+}</code></pre>
+
+            <ul>
+                <li>The ETH will get stored in the contract, which you own and can later withdraw.</li>
+            </ul>
+
+            <h2>23. Withdraws</h2>
+            <ul>
+                <li>After you send Ether to a contract, it gets stored in the contract's Ethereum account, and it will be trapped there — unless you add a function to withdraw the Ether from the contract:</li>
+            </ul>
+
+            <pre><code class="language-solidity">contract GetPaid is Ownable {
+  function withdraw() external onlyOwner {
+    address payable _owner = address(uint160(owner()));
+    _owner.transfer(address(this).balance);
+  }
+}</code></pre>
+
+            <ul>
+                <li>We're using <code>owner()</code> and <code>onlyOwner</code> from the <code>Ownable</code> contract.</li>
+                <li>You cannot transfer Ether to an address unless that address is of type <code>address payable</code>.</li>
+                <li>You can transfer Ether to that address using the <code>transfer</code> function., and <code>address(this).balance</code> will return the total balance stored on the contract.</li>
+                <li>You can use <code>transfer</code> to send funds to any Ethereum address. For example, you could have a function that transfers Ether back to the <code>msg.sender</code> if they overpaid for an item:</li>
+            </ul>
+
+            <pre><code class="language-solidity">uint itemFee = 0.001 ether;
+msg.sender.transfer(msg.value - itemFee);</code></pre>
+
+<h2>24. Tokens on Ethereum</h2>
+            <ul>
+                <li>A <strong>token</strong> on Ethereum is basically just a smart contract that follows some common rules — namely it implements a standard set of functions that all other token contracts share, such as <code>transferFrom(address _from, address _to, uint256 _amount)</code> and <code>balanceOf(address _owner)</code>.</li>
+                <li>Internally the smart contract usually has a mapping, <code>mapping(address => uint256)</code> balances, that keeps track of how much balance each address has.</li>
+                <li>So basically a token is just a contract that keeps track of who owns how much of that token, and some functions so those users can transfer their tokens to other addresses.</li>
+                <li><strong>Why does it matter?</strong>: Since all <code>ERC20</code> tokens share the same set of functions with the same names, they can all be interacted with in the same ways. This means if you build an application that is capable of interacting with one <code>ERC20</code> token, it's also capable of interacting with any <code>ERC20</code> token. That way more tokens can easily be added to your app in the future without needing to be custom coded. You could simply plug in the new token contract address, and boom, your app has another token it can use.</li>
+                <li><strong>Other token standards</strong>: Another token standard that's a much better fit for crypto-collectibles like CryptoZombies — and they're called <code>ERC721</code> tokens. <code>ERC721</code> tokens are not interchangeable since each one is assumed to be unique, and are not divisible. You can only trade them in whole units, and each one has a unique ID. So these are a perfect fit for making our zombies tradeable. <strong>NOTE</strong>: Using a standard like <code>ERC721</code> has the benefit that we don't have to implement the auction or escrow logic within our contract that determines how players can trade / sell our zombies. If we conform to the spec, someone else could build an exchange platform for crypto-tradable <code>ERC721</code> assets, and our <code>ERC721</code> zombies would be usable on that platform.</li>
+                <li><strong>NOTE</strong>: When implementing a token contract, the first thing we do is copy the interface to its own Solidity file and import it.</li>
+            </ul>
+
+            <h2>25. Library in Solidity</h2>
+            <ul>
+                <li>A <strong>library</strong> is a collection of functions that can be used in multiple contracts. Libraries are useful for reusing code across multiple contracts, and they can also be used to create utility functions that are not specific to any particular contract.</li>
+                <li>A library is a special type of contract in Solidity. One of the things it is useful for is to attach functions to native data types. The <code>SafeMath</code> library from <code>OpenZeppelin</code> has 4 functions — <code>add</code>, <code>sub</code>, <code>mul</code>, and <code>div</code>. And now we can access these functions from <code>uint256</code> as follows:</li>
+            </ul>
+
+            <pre><code class="language-solidity">using SafeMath for uint256;
+
+uint256 a = 5;
+uint256 b = a.add(3); // 5 + 3 = 8
+uint256 c = a.mul(2); // 5 * 2 = 10</code></pre>
+
+            <ul>
+                <li>For our purposes, libraries allow us to use the <code>using</code> keyword, which automatically tacks on all of the library's methods to another data type.</li>
+                <li><code>assert</code> is similar to <code>require</code>, where it will throw an error if false. The difference between <code>assert</code> and <code>require</code> is that <code>require</code> will refund the user the rest of their gas when a function fails, whereas <code>assert</code> will not. So most of the time you want to use <code>require</code> in your code; <code>assert</code> is typically used when something has gone horribly wrong with the code (like a <code>uint</code> overflow).</li>
+            </ul>
+
+            <h2>26. Comments</h2>
+            <ul>
+                <li>Single line (<code>//</code>) and multi-line comments (<code>/* */</code>) are both supported.</li>
+                <li>The standard in the Solidity community is to use a format called <code>natspec</code>, which looks like this:</li>
+            </ul>
+
+            <pre><code class="language-solidity">/// @title A contract for basic math operations
+/// @author H4XF13LD MORRIS 💯💯😎💯💯
+/// @notice For now, this contract just adds a multiply function
+contract Math {
+  /// @notice Multiplies 2 numbers together
+  /// @param x the first uint.
+  /// @param y the second uint.
+  /// @return z the product of (x * y)
+  /// @dev This function does not currently check for overflows
+  function multiply(uint x, uint y) returns (uint z) {
+    // This is just a normal comment, and won't get picked up by natspec
+    z = x * y;
+  }
+}</code></pre>
+
+            <ul>
+                <li><code>@notice</code> explains to a user what the contract / function does. <code>@dev</code> is for explaining extra details to developers. <code>@param</code> and <code>@return</code> are for describing what each parameter and return value of a function are for. All tags are optional. But at the very least, leave a <code>@dev</code> note explaining what each function does.</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+
