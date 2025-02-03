@@ -333,7 +333,7 @@ In Polkadot SDK based blockchains, the transactions (extrinsics) can be:
 * **FRAME** is a rust-based framework for building Substrate-based blockchains/substrate runtimes by providing re-usable building blocks.
 
 ## 5.1 Pallets
-* FRAME takes the opinion that the bockchain runtime should be composed of individual modules called `pallets`.
+* FRAME takes the opinion that the blockchain runtime should be composed of individual modules called `pallets`.
 ![Diagram Description](images/frame-overview.png)
 * Essential components of a `pallet`:
   * **Calls/Dispatchable Extrinsics**: These are functions that can be called on the pallet. They can be used to interact with the blockchain, such as transferring balance. A transaction will specify the call to dispatch.

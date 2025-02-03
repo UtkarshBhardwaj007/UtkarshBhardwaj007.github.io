@@ -30,10 +30,12 @@ Person[] public people;
 
 ## 7. Functions
 * A function declaration in solidity looks like the following:
+
 ```solidity
 function eatHamburgers(string memory _name, uint _amount) public {}
 ```
-* Note that we're specifying the function visibility as `public`. We're also providing instructions about where the `_name` variable should be stored - in `memory`.
+
+* Functions may have `Visibility Modifiers`. Note that we're specifying the function visibility as `public`. We're also providing instructions about where the `_name` variable should be stored - in `memory`.
 * In addition to **`public`** and **`private`**, `Solidity` has two more types of visibility for functions: **`internal`** and **`external`**.
 * `internal` is the same as `private`, except that it's also accessible to contracts that inherit from this contract.
 * `external` is similar to `public`, except that these functions can **ONLY** be called outside the contract — they can't be called by other functions inside that contract.
@@ -56,13 +58,13 @@ function sayHello() public returns (string memory) {
 }
 ```
 
-* **View Functions**: If a function is only reading data from the blockchain, you can mark it as `view`. This will save you some gas:
+* **View Functions** (`State Modifier`): If a function is only reading data from the blockchain, you can mark it as `view`. This will save you some gas. `view` functions don't cost any gas when they're called externally by a user. **NOTE** that if a `view` function is called internally from another function in the same contract that is not a view function, it will still cost gas. This is because the other function creates a transaction on Ethereum, and will still need to be verified from every node. So view functions are only free when they're called externally.:
 
 ```solidity
 function sayHello() public view returns (string memory) {}
 ```
 
-* **Pure Functions**: If a function doesn't read from the blockchain at all (i.e., it only depends on its parameters), you can mark it as `pure`. This will save you even more gas:
+* **Pure Functions** (`State Modifier`): If a function doesn't read from the blockchain at all (i.e., it only depends on its parameters), you can mark it as `pure`. This will save you even more gas:
 
 ```solidity
 function _multiply(uint a, uint b) private pure returns (uint) {
@@ -148,6 +150,11 @@ contract BabyDoge is Doge {
     return "Such Moon BabyDoge";
   }
 }
+
+// contract can inherit from multiple contracts
+contract SatoshiNakamoto is NickSzabo, HalFinney {
+  // Omg, the secrets of the universe revealed!
+}
 ```
 
 * `BabyDoge` inherits from `Doge`. That means if you compile and deploy `BabyDoge`, it will have access to both `catchphrase()` and `anotherCatchphrase()` (and any other `public` functions we may define on `Doge`).
@@ -208,6 +215,10 @@ contract newContract is SomeOtherContract {
   }
   ```
 
+* **Storage is Expensive**: Writing to `storage` is one of the most expensive operations in Solidity. In order to keep costs down, you want to avoid writing data to storage except when absolutely necessary. Sometimes this involves seemingly inefficient programming logic — like rebuilding an array in `memory` every time a function is called instead of simply saving that array in a variable for quick lookups.
+
+![Diagram Description](images/data-locations-in-solidity.svg)
+
 ## 17. Interfaces
 * An interface is a type in Solidity which is used to specify the functions an object must implement, without defining the implementation of those functions.
 * For our contract to talk to another contract on the blockchain that we don't own, first we need to define an interface. We declare the functions we want to use from the other contract in this interface so that our contract knows what the other contract's functions look like, how to call them, and what sort of response to expect.
@@ -235,3 +246,110 @@ contract MyContract {
   }
 }
 ```
+
+## 18. OpenZeppelin
+* `OpenZeppelin` is a collection of open-source smart contracts that provide common patterns and best practices for building secure and scalable Ethereum applications.
+* `Ownable` is a popular contract from `OpenZeppelin` that provides a simple way to restrict access to a contract's functions to only the contract's owner. `Ownable` contract basically does the following:
+  * When a contract is created, its constructor sets the owner to `msg.sender` (the person who deployed it)
+  * It adds an `onlyOwner` modifier, which can restrict access to certain functions to only the `owner`.
+  * It allows you to transfer the contract to a new `owner`
+
+## 19. Function Modifiers (`modifier`)
+* A function modifier looks just like a function, but uses the keyword `modifier` instead of the keyword `function`. And it can't be called directly like a function can — instead we can attach the modifier's name at the end of a function definition to change that function's behavior:
+
+```solidity
+contract Ownable {
+  ...
+  modifier onlyOwner() {
+    require(isOwner());
+    _;
+  }
+  ...
+  function renounceOwnership() public onlyOwner {
+    emit OwnershipTransferred(_owner, address(0));
+    _owner = address(0);
+  }
+}
+```
+
+* When you call `renounceOwnership`§, the code inside `onlyOwner` executes first. Then when it hits the `_`; statement in `onlyOwner`, it goes back and executes the code inside `renounceOwnership`.
+* Function modifiers can also take **arguments**:
+
+```solidity
+// A mapping to store a user's age:
+mapping (uint => uint) public age;
+
+// Modifier that requires this user to be older than a certain age:
+modifier olderThan(uint _age, uint _userId) {
+  require(age[_userId] >= _age);
+  _;
+}
+
+// Must be older than 16 to drive a car (in the US, at least).
+// We can call the `olderThan` modifier with arguments like so:
+function driveCar(uint _userId) public olderThan(16, _userId) {
+  // Some function logic
+}
+```
+
+* The `olderThan` modifier takes arguments just like a function does. And that the `driveCar` function passes its arguments to the modifier.
+
+## 20. Gas
+* Gas is a measure of how much computational power a transaction uses. It's a way to limit the amount of resources a transaction can use, which helps prevent abuse and ensures that the network remains stable.
+* Normally there's no benefit to using sub-types of `uint` (`uint8`, `uint16`, `uint32`, etc.) §because Solidity reserves `256` bits of storage regardless of the `uint` size. For example, using `uint8` instead of `uint` (`uint256`) won't save you any gas. But there's an exception to this: inside `structs`. If you have multiple `uint` inside a `struct`, using a smaller-sized `uint` when possible will allow Solidity to pack these variables together to take up less storage.
+* You'll also want to cluster identical data types together (i.e. put them next to each other in the struct) so that Solidity can minimize the required storage space.
+
+## 21. Passing structs as arguments
+You can pass a `storage pointer` to a `struct` as an argument to a `private` or `internal` function. This way we can pass a `reference` to our zombie into a function instead of passing in a zombie ID and looking it up:
+
+```solidity
+function _doStuff(Zombie storage _zombie) internal {
+  // do stuff with _zombie
+}
+```
+
+## 22. The `payable` Modifier
+* The `payable` modifier allows a function to receive Ether. This is useful for functions that need to pay for gas or for functions that need to receive payments from users. e.g:
+
+```solidity
+contract OnlineStore {
+  function buySomething() external payable {
+    // Check to make sure 0.001 ether was sent to the function call:
+    require(msg.value == 0.001 ether);
+    // If so, some logic to transfer the digital item to the caller of the function:
+    transferThing(msg.sender);
+  }
+}
+```
+
+* The ETH will get stored in the contract, which you own and can later withdraw.
+
+## 23. Withdraws
+* After you send Ether to a contract, it gets stored in the contract's Ethereum account, and it will be trapped there — unless you add a function to withdraw the Ether from the contract:
+
+```solidity
+contract GetPaid is Ownable {
+  function withdraw() external onlyOwner {
+    address payable _owner = address(uint160(owner()));
+    _owner.transfer(address(this).balance);
+  }
+}
+```
+
+* We're using `owner()` and `onlyOwner` from the `Ownable` contract.
+* You cannot transfer Ether to an address unless that address is of type `address payable`.
+* You can transfer Ether to that address using the `transfer` function., and `address(this).balance` will return the total balance stored on the contract.
+* You can use `transfer` to send funds to any Ethereum address. For example, you could have a function that transfers Ether back to the `msg.sender` if they overpaid for an item:
+
+```solidity
+uint itemFee = 0.001 ether;
+msg.sender.transfer(msg.value - itemFee);
+```
+
+## 24. Tokens on Ethereum
+* A **token** on Ethereum is basically just a smart contract that follows some common rules — namely it implements a standard set of functions that all other token contracts share, such as `transferFrom(address _from, address _to, uint256 _amount)` and `balanceOf(address _owner)`.
+* Internally the smart contract usually has a mapping, `mapping(address => uint256)` balances, that keeps track of how much balance each address has.
+* So basically a token is just a contract that keeps track of who owns how much of that token, and some functions so those users can transfer their tokens to other addresses.
+* **Why does it matter?**: Since all `ERC20` tokens share the same set of functions with the same names, they can all be interacted with in the same ways. This means if you build an application that is capable of interacting with one `ERC20` token, it's also capable of interacting with any `ERC20` token. That way more tokens can easily be added to your app in the future without needing to be custom coded. You could simply plug in the new token contract address, and boom, your app has another token it can use.
+* **Other token standards**: Another token standard that's a much better fit for crypto-collectibles like CryptoZombies — and they're called `ERC721` tokens. `ERC721` tokens are not interchangeable since each one is assumed to be unique, and are not divisible. You can only trade them in whole units, and each one has a unique ID. So these are a perfect fit for making our zombies tradeable. **NOTE**: Using a standard like `ERC721` has the benefit that we don't have to implement the auction or escrow logic within our contract that determines how players can trade / sell our zombies. If we conform to the spec, someone else could build an exchange platform for crypto-tradable `ERC721` assets, and our `ERC721` zombies would be usable on that platform.
+* **NOTE**: When implementing a token contract, the first thing we do is copy the interface to its own Solidity file and import it.
