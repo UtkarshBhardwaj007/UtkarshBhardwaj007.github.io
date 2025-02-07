@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hardhat Essentials - Utkarsh Bhardwaj</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <a href="index.html" class="back-link">
+                <span class="icon">←</span> Back to Home
+            </a>
+
+            <h1>Hardhat Essentials (<a href="https://hardhat.org/tutorial">ref</a>)</h1>
+
+            <h2>1. Creating a new Hardhat project</h2>
+
+            <pre><code class="language-bash">mkdir hardhat-tutorial
+cd hardhat-tutorial
+
+npm init
+
+npm install --save-dev hardhat
+
+npx hardhat init</code></pre>
+
+            <h2>2. Hardhat's architecture</h2>
+            <p>Hardhat is designed around the concepts of tasks and plugins.</p>
+
+            <h3>2.1 Tasks</h3>
+            <p>To see the currently available tasks in your project, run:</p>
+
+            <pre><code class="language-bash"># List available tasks
+npx hardhat
+
+# Compile the smart contracts
+npx hardhat compile
+
+# Run the tests
+npx hardhat test</code></pre>
+
+            <h3>2.2 Plugins</h3>
+            <p>Hardhat is unopinionated in terms of what tools you end up using, but it does come with some built-in defaults. All of which can be overridden. Most of the time the way to use a given tool is by consuming a plugin that integrates it into Hardhat.</p>
+
+            <pre><code class="language-bash"># Install the recommended plugin
+npm install --save-dev @nomicfoundation/hardhat-toolbox</code></pre>
+
+            <p>Add this line to the top of your <code>hardhat.config.js</code>:</p>
+
+            <pre><code class="language-javascript">require("@nomicfoundation/hardhat-toolbox");</code></pre>
+
+            <h2>3. Writing tests</h2>
+            <ul>
+                <li>Contracts live inside a folder called <code>contracts</code>.</li>
+                <li>Tests live inside a folder called <code>test</code>.</li>
+            </ul>
+
+            <pre><code class="language-javascript">const [owner] = await ethers.getSigners();</code></pre>
+
+            <p>=> Here we're getting a list of the accounts in the node we're connected to, which in this case is Hardhat Network, and we're only keeping the first one.</p>
+
+            <p><strong>NOTE</strong>: Test setups can be re-used with <code>fixtures</code>.</p>
+
+            <h2>4. Debugging with Hardhat Network</h2>
+            <p>When running your contracts and tests on Hardhat Network you can print logging messages and contract variables calling console.log() from your Solidity code. To use it you have to import hardhat/console.sol in your contract code.</p>
+
+            <pre><code class="language-solidity">pragma solidity ^0.8.0;
+
+import "hardhat/console.sol";
+
+contract Token {
+    // ...
+    // Using console.log() inside a Solidity contract
+    console.log(
+        "Transferring from %s to %s %s tokens",
+        msg.sender,
+        to,
+        amount
+    );
+    // ...
+}</code></pre>
+
+            <h2>5. Deploying to a live network</h2>
+            <p>Deployments are done through <code>HardHat Ignition</code>.</p>
+
+            <pre><code class="language-bash">npx hardhat ignition deploy ./ignition/modules/Token.js --network sepolia</code></pre>
+
+            <p><a href="https://hardhat.org/tutorial/deploying-to-a-live-network">Read</a></p>
+
+            <h2>6. Verify on Etherscan</h2>
+
+            <pre><code class="language-bash">npx hardhat ignition deploy ignition/modules/Lock.ts --network sepolia --verify</code></pre>
+
+            <p><a href="https://hardhat.org/hardhat-runner/docs/guides/verifying">More</a></p>
+
+            <h2>7. Contract Deployed at:</h2>
+
+            <pre><code>0x69A5C0E26FA12FcDfaD9E88e78e03054fAb107a8</code></pre>
+
+            <p><strong>EtherScan</strong></p>
+
+            <pre><code>https://holesky.etherscan.io/address/0x69A5C0E26FA12FcDfaD9E88e78e03054fAb107a8#code</code></pre>
+        </div>
+    </div>
+</body>
+</html>
