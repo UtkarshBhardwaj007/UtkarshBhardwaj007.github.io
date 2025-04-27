@@ -102,6 +102,33 @@ contract Token {
             <p><strong>EtherScan</strong></p>
 
             <pre><code>https://holesky.etherscan.io/address/0x69A5C0E26FA12FcDfaD9E88e78e03054fAb107a8#code</code></pre>
+
+            <h2>8. Using OpenZeppelin contracts</h2>
+
+            <pre><code class="language-bash">npm install @openzeppelin/contracts</code></pre>
+
+            <pre><code class="language-typescript">import "@openzeppelin/contracts/access/Ownable.sol";
+
+contract Box is Ownable {}</code></pre>
+
+            <h2>9. To deploy to HardHat local network</h2>
+            <p>On one terminal</p>
+
+            <pre><code class="language-zsh">npx hardhat node</code></pre>
+
+            <p>On a separate terminal:</p>
+
+            <pre><code class="language-zsh">npx hardhat ignition deploy ignition/modules/Escrow.ts --parameters ignition/parameters.json</code></pre>
+
+            <h2>10. Using HardHat <code>vars</code></h2>
+
+            <pre><code class="language-zsh">npx hardhat vars set INFURA_API_KEY
+npx hardhat vars get INFURA_API_KEY
+npx hardhat vars list</code></pre>
+
+            <p>Then in <code>hardhat.config.ts</code>:</p>
+
+            <pre><code class="language-typescript">const INFURA_API_KEY = vars.get("INFURA_API_KEY");</code></pre>
         </div>
     </div>
 </body>

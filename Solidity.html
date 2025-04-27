@@ -436,6 +436,32 @@ contract Math {
             <ul>
                 <li><code>@notice</code> explains to a user what the contract / function does. <code>@dev</code> is for explaining extra details to developers. <code>@param</code> and <code>@return</code> are for describing what each parameter and return value of a function are for. All tags are optional. But at the very least, leave a <code>@dev</code> note explaining what each function does.</li>
             </ul>
+
+            <h2>27. CallData</h2>
+            <ul>
+                <li><code>calldata</code> is a special data location that contains the function arguments. It is a non-modifiable, non-persistent area where function arguments are stored.</li>
+                <li>Using <code>calldata</code> is more gas-efficient than using <code>memory</code> for function parameters, especially for arrays and strings, because it avoids unnecessary data copying.</li>
+                <li>It can only be used for external function parameters.</li>
+            </ul>
+
+            <pre><code class="language-solidity">function processArray(uint[] calldata _values) external {
+  // _values is stored in calldata
+  // No need to copy the array to memory
+  for(uint i = 0; i < _values.length; i++) {
+    // Process each value
+  }
+}</code></pre>
+
+            <ul>
+                <li>Key differences between <code>calldata</code> and <code>memory</code>:</li>
+                <ul>
+                    <li><code>calldata</code> is read-only and cannot be modified.</li>
+                    <li><code>calldata</code> is cheaper in terms of gas cost because it doesn't copy the data.</li>
+                    <li><code>calldata</code> can only be used for parameters of external functions.</li>
+                    <li><code>memory</code> variables can be modified within the function.</li>
+                </ul>
+                <li>When working with large arrays or strings that you don't need to modify, using <code>calldata</code> instead of <code>memory</code> can significantly reduce gas costs.</li>
+            </ul>
         </div>
     </div>
 </body>
